@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 01
+Sprint 02
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 02 — Dashboard (Tela inicial, Cards, Estatísticas resumidas, Lista de torneios, Pull To Refresh, Loading, Empty State).
+Sprint 03 — Perfil (Visualizar perfil, Alterar nome, Alterar senha, Atualizar avatar).
 
 ---
 
@@ -671,3 +671,76 @@ Layout das abas protegidas:
 - Verifica se usuário está autenticado
 - Se não estiver, redireciona para `(auth)/login`
 - Mantém as 4 abas: Início, Torneios, Histórico, Perfil
+
+---
+
+# Sprint 02 — Dashboard
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Tela inicial (Dashboard) com layout completo
+- Cards de estatísticas resumidas (Torneios, Partidas, Vitórias, Aproveitamento)
+- Lista de torneios recentes
+- Pull To Refresh na lista
+- Loading state (full screen enquanto carrega)
+- Empty State (quando não há torneios)
+- Error State (quando a API falha)
+
+## Arquivos criados
+
+### Features/dashboard/
+- features/dashboard/types/dashboard-types.ts
+- features/dashboard/services/dashboard-service.ts
+- features/dashboard/viewmodels/use-dashboard-viewmodel.ts
+- features/dashboard/components/stat-card.tsx
+- features/dashboard/components/tournament-list-item.tsx
+
+## Arquivos modificados
+
+- app/(tabs)/index.tsx — implementado dashboard completo com FlatList, RefreshControl, Loading, ErrorState, EmptyState, StatCards e TournamentListItem
+
+## Explicação dos arquivos
+
+### features/dashboard/types/dashboard-types.ts
+Tipos específicos da feature de dashboard:
+- `UserStatistics`: totalTournaments, totalMatches, wins, losses, winRate
+- `DashboardData`: statistics + recentTournaments
+
+### features/dashboard/services/dashboard-service.ts
+Service de comunicação com a API de dashboard:
+- `getStatistics()`: GET /statistics/me — retorna estatísticas do usuário
+- `getRecentTournaments()`: GET /tournaments?page=1&limit=5 — retorna torneios recentes
+
+### features/dashboard/viewmodels/use-dashboard-viewmodel.ts
+ViewModel da tela de Dashboard:
+- Usa `useQuery` para buscar estatísticas e torneios recentes
+- Fornece `refresh()` para Pull To Refresh (refetch de ambas queries)
+- Retorna: statistics, tournaments, isLoading, isRefreshing, error, refresh
+
+### features/dashboard/components/stat-card.tsx
+Componente de card de estatística:
+- Ícone, label, valor e cor personalizável
+- Utiliza o componente `Card` reutilizável
+
+### features/dashboard/components/tournament-list-item.tsx
+Componente de item da lista de torneios:
+- Exibe nome, descrição, participantes e status
+- Utiliza `Card` e `Badge` reutilizáveis
+- Mapeia status para variantes visuais (pending → warning, in_progress → info, completed → success)
+
+### app/(tabs)/index.tsx
+Tela de Dashboard:
+- Exibe Loading full screen enquanto carrega dados iniciais
+- Exibe ErrorState com botão "Tentar novamente" se a API falhar
+- Exibe FlatList com RefreshControl (Pull To Refresh)
+- Header com cards de estatísticas (Torneios, Partidas, Vitórias, Aproveitamento)
+- Lista de torneios recentes com TournamentListItem
+- EmptyState quando não há torneios
