@@ -1,25 +1,36 @@
+export type TournamentStatus = 'WAITING' | 'STARTED' | 'FINISHED'
+
+export type TournamentOwner = {
+  id: string
+  name: string
+  email: string
+}
+
+export type TournamentCount = {
+  participants: number
+}
+
 export type Tournament = {
   id: string
   name: string
-  description?: string
+  description?: string | null
   status: TournamentStatus
   ownerId: string
-  maxParticipants: number
-  currentParticipants: number
+  maxPlayers: number
   createdAt: string
   updatedAt: string
+  owner: TournamentOwner
+  _count: TournamentCount
 }
-
-export type TournamentStatus = 'pending' | 'in_progress' | 'completed'
 
 export type CreateTournamentRequest = {
   name: string
   description?: string
-  maxParticipants: number
+  maxPlayers: number
 }
 
 export type UpdateTournamentRequest = {
   name?: string
-  description?: string
-  maxParticipants?: number
+  description?: string | null
+  maxPlayers?: number
 }
