@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_BASE_URL, API_TIMEOUT } from '@/constants/api'
 import { Platform } from 'react-native'
+import { useAuthStore } from '@/stores/auth-store'
 
 const baseURL = Platform.select({
   android: API_BASE_URL.android,
@@ -18,6 +19,10 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    const token = useAuthStore.getState().token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
@@ -27,9 +32,10 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
-      return Promise.reject(error)
+      const { logout } = useAuthStore.getState()
+      await logout()
     }
     return Promise.reject(error)
   }

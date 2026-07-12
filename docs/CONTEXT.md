@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 00
+Sprint 01
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 01 — Autenticação (Login, Cadastro, Splash, Logout, Persistência, Auto Login, Axios Interceptor).
+Sprint 02 — Dashboard (Tela inicial, Cards, Estatísticas resumidas, Lista de torneios, Pull To Refresh, Loading, Empty State).
 
 ---
 
@@ -546,3 +546,128 @@ Nenhuma.
 ## Próxima Sprint
 
 Sprint 01 — Autenticação (Splash, Login, Cadastro, Logout, Persistência, Auto Login, Axios Interceptor).
+
+---
+
+# Sprint 01 — Autenticação
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Splash Screen com verificação de token e redirecionamento automático
+- Tela de Login com formulário validado (React Hook Form + Zod)
+- Tela de Cadastro com formulário validado (React Hook Form + Zod)
+- Logout com limpeza de sessão e redirecionamento
+- Persistência do Token JWT via AsyncStorage
+- Persistência do Usuário autenticado via AsyncStorage
+- Auto Login ao abrir o aplicativo
+- Axios Interceptor: request (Bearer Token automático) e response (401 → logout automático)
+- Proteção de rotas privadas (redirect para login se não autenticado)
+
+## Arquivos criados
+
+### Features/auth/
+- features/auth/types/auth-types.ts
+- features/auth/services/auth-service.ts
+- features/auth/viewmodels/use-auth-viewmodel.ts
+- features/auth/viewmodels/use-login-viewmodel.ts
+- features/auth/viewmodels/use-register-viewmodel.ts
+- features/auth/hooks/use-auth-redirect.ts
+
+## Arquivos modificados
+
+- stores/auth-store.ts — adicionado persistência (saveSession, restoreSession, logout com AsyncStorage), tipo User concreto, isLoading
+- services/api.ts — adicionado interceptor request (Bearer Token) e response (401 → logout)
+- app/(auth)/splash.tsx — implementado auto-login com restoreSession e redirect
+- app/(auth)/login.tsx — implementado formulário completo com React Hook Form + Zod
+- app/(auth)/register.tsx — implementado formulário completo com React Hook Form + Zod
+- app/(auth)/_layout.tsx — mantido simples (sem redirect, Splash gerencia)
+- app/(tabs)/_layout.tsx — adicionado proteção de rota (redirect para login se não autenticado)
+
+## Explicação dos arquivos
+
+### stores/auth-store.ts
+Store Zustand responsável por gerenciar o estado de autenticação:
+- `token`: string do JWT
+- `user`: dados do usuário autenticado (User)
+- `isAuthenticated`: boolean derivado da existência do token
+- `isLoading`: controle de carregamento na restauração da sessão
+- `setToken(token)`: define o token e atualiza isAuthenticated
+- `setUser(user)`: define os dados do usuário
+- `saveSession(token, user)`: persiste token e user no AsyncStorage e atualiza o estado
+- `restoreSession()`: recupera token e user do AsyncStorage e atualiza o estado
+- `logout()`: remove token e user do AsyncStorage e limpa o estado
+
+### services/api.ts
+Instância Axios compartilhada:
+- Interceptor request: adiciona header `Authorization: Bearer <token>` automaticamente quando existe token no store
+- Interceptor response: detecta erro 401 e executa logout automático
+
+### features/auth/types/auth-types.ts
+Tipos específicos da feature de autenticação:
+- `LoginRequest`: email e password
+- `RegisterRequest`: name, email e password
+- `AuthResponse`: token e user
+
+### features/auth/services/auth-service.ts
+Service de comunicação com a API de autenticação:
+- `login(data)`: POST /auth/login
+- `register(data)`: POST /auth/register
+- `logout()`: POST /auth/logout
+
+### features/auth/viewmodels/use-auth-viewmodel.ts
+ViewModel global de autenticação:
+- Fornece `isLoading`, `isAuthenticated`, `user` do store
+- Fornece `restoreSession()` e `logout()` como ações
+
+### features/auth/viewmodels/use-login-viewmodel.ts
+ViewModel da tela de Login:
+- Usa `useMutation` do React Query para chamar `authService.login()`
+- On success: salva sessão via `saveSession()`
+- Retorna: `login(data)`, `isLoading`, `error`, `clearError()`
+
+### features/auth/viewmodels/use-register-viewmodel.ts
+ViewModel da tela de Cadastro:
+- Usa `useMutation` do React Query para chamar `authService.register()`
+- On success: salva sessão via `saveSession()`
+- Retorna: `register(data)`, `isLoading`, `error`, `clearError()`
+
+### features/auth/hooks/use-auth-redirect.ts
+Hook de navegação:
+- Observa `isAuthenticated` e `isLoading` do store
+- Redireciona para `(tabs)` se autenticado ou `(auth)/login` se não
+
+### app/(auth)/splash.tsx
+Tela de splash:
+- Ao montar, chama `restoreSession()` para recuperar sessão do AsyncStorage
+- Quando `isAuthenticated` muda para true, redireciona para `(tabs)`
+- Exibe logo "Tennis Court" com ActivityIndicator
+
+### app/(auth)/login.tsx
+Tela de login:
+- Formulário com campos de email e senha
+- Validação com Zod (email válido, senha mínimo 6 caracteres)
+- Consome `useLoginViewModel` para realizar o login
+- Em caso de sucesso, redireciona para `(tabs)`
+- Link para tela de cadastro
+
+### app/(auth)/register.tsx
+Tela de cadastro:
+- Formulário com campos de nome, email, senha e confirmar senha
+- Validação com Zod (nome mínimo 3, email válido, senha mínimo 6, senhas conferem)
+- Consome `useRegisterViewModel` para realizar o cadastro
+- Em caso de sucesso, redireciona para `(tabs)`
+- Link para tela de login
+
+### app/(tabs)/_layout.tsx
+Layout das abas protegidas:
+- Verifica se usuário está autenticado
+- Se não estiver, redireciona para `(auth)/login`
+- Mantém as 4 abas: Início, Torneios, Histórico, Perfil
