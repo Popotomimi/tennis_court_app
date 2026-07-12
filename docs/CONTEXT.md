@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 04
+Sprint 05
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 05 — Detalhes do Torneio (Informações, Participantes, Status, Ações).
+Sprint 06 — Participantes (Entrar, Sair, Lista de participantes).
 
 ---
 
@@ -986,3 +986,106 @@ Tela de Torneios:
 Atualizado para refletir os novos campos da API:
 - Status: `WAITING | STARTED | FINISHED` (antes `pending | in_progress | completed`)
 - Participantes: `_count.participants` e `maxPlayers` (antes `currentParticipants` e `maxParticipants`)
+
+---
+
+# Sprint 05 — Detalhes do Torneio
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Tela de detalhes do torneio com informações completas (nome, descrição, status, owner, data criação, participantes)
+- Lista de participantes (apenas leitura)
+- Badge de status (WAITING → warning, STARTED → info, FINISHED → success)
+- Botão "Iniciar Torneio" (owner, status WAITING, mínimo 2 participantes) com confirmação via Alert
+- Botões "Editar" e "Excluir" (owner, WAITING) com navegação de volta à listagem
+- Navegação desde a listagem (toque no card → tela de detalhes)
+- Loading, Error e Empty states
+- Pull to refresh na tela de detalhes
+
+## Arquivos criados
+
+### Rotas (app/)
+- app/tournaments/[id].tsx
+
+### Features/tournaments/
+- features/tournaments/types/tournament-detail-types.ts
+- features/tournaments/services/tournament-detail-service.ts
+- features/tournaments/viewmodels/use-tournament-detail-viewmodel.ts
+- features/tournaments/viewmodels/use-start-tournament-viewmodel.ts
+- features/tournaments/components/tournament-detail-header.tsx
+- features/tournaments/components/participant-list-item.tsx
+
+## Arquivos modificados
+
+- features/tournaments/components/tournament-card.tsx — adicionado onPress e TouchableOpacity wrapper para navegação
+- app/(tabs)/tournaments.tsx — adicionado import useRouter/useLocalSearchParams, navegação onPress, e efeitos para editar/excluir a partir de parâmetros da URL
+
+## Explicação dos arquivos
+
+### app/tournaments/[id].tsx
+Tela de detalhes do torneio (rota dinâmica):
+- Recebe o id do torneio via `useLocalSearchParams`
+- Exibe cabeçalho com informações do torneio via TournamentDetailHeader
+- Lista de participantes via FlatList com ParticipantListItem
+- Botão "Iniciar Torneio" visível apenas para owner e WAITING (mínimo 2 participantes)
+- Botões "Editar" e "Excluir" que navegam de volta à listagem com parâmetros
+- Loading, Error, Empty states
+- Pull to refresh via ScrollView + refresh das queries
+
+### features/tournaments/types/tournament-detail-types.ts
+Tipos específicos dos detalhes do torneio:
+- `ParticipantUser`: id, name, email, avatar (string | null)
+- `ParticipantsListResponse`: tournamentId, tournamentName, participants[], total
+- `StartTournamentResponse`: message, matches[] (playerOne, playerTwo, round)
+
+### features/tournaments/services/tournament-detail-service.ts
+Service de comunicação com a API de detalhes:
+- `getDetails(id)`: GET /tournaments/:id — retorna Tournament
+- `getParticipants(id)`: GET /tournaments/:id/participants — retorna lista de participantes
+- `startTournament(id)`: POST /tournaments/:id/start — inicia torneio, retorna matches gerados
+
+### features/tournaments/viewmodels/use-tournament-detail-viewmodel.ts
+ViewModel dos detalhes do torneio:
+- `useQuery` para buscar detalhes e participantes (queries paralelas)
+- `refresh()` para refetch de ambas as queries
+- Retorna: tournament, participants, participantsTotal, isLoading, isRefetching, error, refresh
+
+### features/tournaments/viewmodels/use-start-tournament-viewmodel.ts
+ViewModel para iniciar torneio:
+- `useMutation` para chamar `tournamentDetailService.startTournament(id)`
+- On success: invalida queries de detalhes, participantes, e listagem de torneios
+- Retorna: start(id), isLoading, error, isSuccess, data, clearError
+
+### features/tournaments/components/tournament-detail-header.tsx
+Componente de cabeçalho dos detalhes:
+- Nome do torneio (título grande)
+- Status com Badge (WAITING/STARTED/FINISHED)
+- Descrição (se houver)
+- Contagem de participantes (ícone + _count.participants / maxPlayers)
+- Data de criação formatada (pt-BR)
+- Nome do organizador (ícone + owner.name)
+
+### features/tournaments/components/participant-list-item.tsx
+Componente de item da lista de participantes:
+- Avatar com iniciais ou foto
+- Nome e email do participante
+
+### features/tournaments/components/tournament-card.tsx
+Card de torneio na listagem modificado:
+- Adicionado `onPress` prop para navegação ao card
+- Card envolvido por TouchableOpacity
+- Botões Editar/Excluir com `e.stopPropagation()` para evitar navegação ao clicar neles
+
+### app/(tabs)/tournaments.tsx
+Tela de listagem de torneios modificada:
+- Adicionado `useRouter` e `useLocalSearchParams` para navegação e recebimento de parâmetros
+- `onPress` no TournamentCard: navega para `/tournaments/:id`
+- `useEffect` para detectar `editId` e `deleteId` passados como parâmetros e abrir modais correspondentes
