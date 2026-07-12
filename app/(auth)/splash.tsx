@@ -7,6 +7,7 @@ export default function SplashScreen() {
   const router = useRouter()
   const restoreSession = useAuthStore((state) => state.restoreSession)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const isLoading = useAuthStore((state) => state.isLoading)
 
   useEffect(() => {
     const init = async () => {
@@ -16,10 +17,14 @@ export default function SplashScreen() {
   }, [restoreSession])
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.replace('/(tabs)')
+    if (!isLoading) {
+      if (isAuthenticated) {
+        router.replace('/(tabs)')
+      } else {
+        router.replace('/(auth)/login')
+      }
     }
-  }, [isAuthenticated, router])
+  }, [isLoading, isAuthenticated, router])
 
   return (
     <View className="flex-1 items-center justify-center bg-white">
