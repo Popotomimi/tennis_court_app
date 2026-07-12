@@ -13,10 +13,10 @@ export const ENDPOINTS = {
     logout: '/auth/logout',
   },
   profile: {
-    me: '/profile/me',
-    update: '/profile',
-    password: '/profile/password',
-    avatar: '/profile/avatar',
+    me: '/users/me',
+    update: '/users/me',
+    password: '/users/password',
+    avatar: '/users/avatar',
   },
   tournaments: {
     list: '/tournaments',
