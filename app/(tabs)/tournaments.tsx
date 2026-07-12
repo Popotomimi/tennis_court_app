@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
@@ -15,6 +16,8 @@ import { useAuthStore } from '@/stores/auth-store'
 import type { Tournament } from '@/types/tournament'
 
 export default function TournamentsScreen() {
+  const router = useRouter()
+  const params = useLocalSearchParams<{ editId?: string; deleteId?: string }>()
   const user = useAuthStore((state) => state.user)
   const {
     tournaments,
@@ -32,6 +35,26 @@ export default function TournamentsScreen() {
   const [deletingTournament, setDeletingTournament] = useState<Tournament | null>(null)
 
   const isOwner = (tournament: Tournament) => user?.id === tournament.ownerId
+
+  useEffect(() => {
+    if (params.editId && tournaments.length > 0) {
+      const tournament = tournaments.find((t) => t.id === params.editId)
+      if (tournament) {
+        setEditingTournament(tournament)
+        router.setParams({ editId: '' })
+      }
+    }
+  }, [params.editId, tournaments])
+
+  useEffect(() => {
+    if (params.deleteId && tournaments.length > 0) {
+      const tournament = tournaments.find((t) => t.id === params.deleteId)
+      if (tournament) {
+        setDeletingTournament(tournament)
+        router.setParams({ deleteId: '' })
+      }
+    }
+  }, [params.deleteId, tournaments])
 
   if (isLoading && tournaments.length === 0) {
     return (
@@ -63,6 +86,7 @@ export default function TournamentsScreen() {
           <TournamentCard
             tournament={item}
             isOwner={isOwner(item)}
+            onPress={() => router.push(`/tournaments/${item.id}`)}
             onEdit={() => setEditingTournament(item)}
             onDelete={() => setDeletingTournament(item)}
           />
