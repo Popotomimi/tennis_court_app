@@ -9,9 +9,9 @@ type TournamentListItemProps = {
 }
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'warning' | 'info' | 'default' }> = {
-  pending: { label: 'Pendente', variant: 'warning' },
-  in_progress: { label: 'Em andamento', variant: 'info' },
-  completed: { label: 'Concluído', variant: 'success' },
+  WAITING: { label: 'Aguardando', variant: 'warning' },
+  STARTED: { label: 'Em andamento', variant: 'info' },
+  FINISHED: { label: 'Concluído', variant: 'success' },
 }
 
 export function TournamentListItem({ tournament }: TournamentListItemProps) {
@@ -29,7 +29,7 @@ export function TournamentListItem({ tournament }: TournamentListItemProps) {
         <View className="flex-row items-center mt-2">
           <Ionicons name="people-outline" size={14} color="#6b7280" />
           <Text className="text-sm text-gray-500 ml-1">
-            {tournament.currentParticipants}/{tournament.maxParticipants}
+            {tournament._count.participants}/{tournament.maxPlayers}
           </Text>
         </View>
       </View>

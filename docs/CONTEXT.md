@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 03
+Sprint 04
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 04 — Torneios (Listar torneios, Criar torneio, Detalhes do torneio).
+Sprint 05 — Detalhes do Torneio (Informações, Participantes, Status, Ações).
 
 ---
 
@@ -846,3 +846,143 @@ Tela de Perfil:
 - Menu "Sair" com Alert de confirmação
 - Feedback inline de erro e sucesso nos modais
 - Loading overlay durante upload de avatar
+
+---
+
+# Sprint 04 — Torneios
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Listagem de torneios com paginação (GET /tournaments?page=&limit=)
+- Criação de torneio (POST /tournaments) com formulário validado
+- Edição de torneio (PUT /tournaments/:id) — apenas owner, status WAITING
+- Exclusão de torneio (DELETE /tournaments/:id) — apenas owner, status WAITING
+- Botão FAB para criar torneio
+- Pull to Refresh na listagem
+- Botão "Carregar mais" para paginação
+- Loading state (full screen enquanto carrega)
+- Error state (com botão "Tentar novamente")
+- Empty state (quando não há torneios)
+- Feedback inline de erro e sucesso nos modais
+- Ações de editar/excluir visíveis apenas para o owner e quando status é WAITING
+
+## Arquivos criados
+
+### Features/tournaments/
+- features/tournaments/types/tournament-types.ts
+- features/tournaments/services/tournament-service.ts
+- features/tournaments/viewmodels/use-tournaments-list-viewmodel.ts
+- features/tournaments/viewmodels/use-create-tournament-viewmodel.ts
+- features/tournaments/viewmodels/use-update-tournament-viewmodel.ts
+- features/tournaments/viewmodels/use-delete-tournament-viewmodel.ts
+- features/tournaments/components/tournament-card.tsx
+- features/tournaments/components/create-tournament-modal.tsx
+- features/tournaments/components/edit-tournament-modal.tsx
+- features/tournaments/components/delete-tournament-confirmation.tsx
+
+## Arquivos modificados
+
+- types/tournament.ts — atualizado para refletir a API real: `maxPlayers` (antes `maxParticipants`), status `WAITING | STARTED | FINISHED` (antes `pending | in_progress | completed`), adicionado `owner` e `_count.participants`
+- features/dashboard/components/tournament-list-item.tsx — atualizado para usar novos campos (`_count.participants`, `maxPlayers`, status `WAITING | STARTED | FINISHED`)
+- app/(tabs)/tournaments.tsx — implementado CRUD completo com FlatList, paginação, FAB, modais de criação/edição/exclusão, Loading/Error/Empty states
+
+## Explicação dos arquivos
+
+### types/tournament.ts
+Tipos compartilhados de torneio atualizados para refletir a API real:
+- `TournamentStatus`: `'WAITING' | 'STARTED' | 'FINISHED'` (antes `pending | in_progress | completed`)
+- `TournamentOwner`: objeto aninhado com `id`, `name`, `email`
+- `TournamentCount`: `{ participants: number }` via `_count`
+- `Tournament`: adicionado `owner` e `_count`, `maxPlayers` (antes `maxParticipants`)
+- `CreateTournamentRequest` e `UpdateTournamentRequest`: `maxPlayers` (antes `maxParticipants`)
+
+### features/tournaments/types/tournament-types.ts
+Tipos específicos da feature de torneios:
+- Re-exporta `Tournament`, `CreateTournamentRequest`, `UpdateTournamentRequest` do types compartilhados
+- `TournamentListParams`: page e limit opcionais
+- `PaginatedTournamentsResponse`: data, total, page, limit
+
+### features/tournaments/services/tournament-service.ts
+Service de comunicação com a API de torneios:
+- `list(page, limit)`: GET /tournaments?page=&limit= — retorna lista paginada
+- `create(data)`: POST /tournaments — cria torneio, retorna 201
+- `update(id, data)`: PUT /tournaments/:id — atualiza torneio (owner only, WAITING)
+- `delete(id)`: DELETE /tournaments/:id — exclui torneio (owner only, WAITING)
+
+### features/tournaments/viewmodels/use-tournaments-list-viewmodel.ts
+ViewModel de listagem de torneios:
+- `useQuery` com chave `['tournaments', page]` para paginação
+- `refresh()`: volta para página 1 e refetch
+- `loadMore()`: avança para próxima página se houver mais
+- `hasMore`: booleano indicando se há mais páginas
+- Retorna: tournaments, total, page, isLoading, isRefetching, error, refresh, loadMore, hasMore, resetPage
+
+### features/tournaments/viewmodels/use-create-tournament-viewmodel.ts
+ViewModel de criação de torneio:
+- `useMutation` para chamar `tournamentService.create()`
+- On success: invalida query `['tournaments']`
+- Retorna: create(data), isLoading, error, isSuccess, clearError
+
+### features/tournaments/viewmodels/use-update-tournament-viewmodel.ts
+ViewModel de edição de torneio:
+- `useMutation` para chamar `tournamentService.update(id, data)`
+- On success: invalida query `['tournaments']`
+- Retorna: update(id, data), isLoading, error, isSuccess, clearError
+
+### features/tournaments/viewmodels/use-delete-tournament-viewmodel.ts
+ViewModel de exclusão de torneio:
+- `useMutation` para chamar `tournamentService.delete(id)`
+- On success: invalida query `['tournaments']`
+- Retorna: remove(id), isLoading, error, isSuccess, clearError
+
+### features/tournaments/components/tournament-card.tsx
+Componente de card de torneio na listagem:
+- Exibe nome, descrição, owner, status (Badge), participantes (ícone + _count.participants/maxPlayers)
+- Botões de Editar e Excluir visíveis apenas para o owner e quando status é WAITING
+- Status mapeado: WAITING → warning, STARTED → info, FINISHED → success
+
+### features/tournaments/components/create-tournament-modal.tsx
+Modal de criação de torneio:
+- Formulário com campos: nome, descrição (opcional), máximo de participantes
+- Validação com Zod (nome 3-100, descrição max 500, maxPlayers 2-128)
+- Botões Cancelar/Criar
+- Feedback inline de erro e sucesso
+- Fecha e reseta formulário após sucesso
+
+### features/tournaments/components/edit-tournament-modal.tsx
+Modal de edição de torneio:
+- Mesmos campos do create, pré-preenchidos com dados atuais
+- Validação com Zod (mesmas regras)
+- Botões Cancelar/Salvar
+- Feedback inline de erro
+
+### features/tournaments/components/delete-tournament-confirmation.tsx
+Modal de confirmação de exclusão:
+- Exibe nome do torneio e mensagem de confirmação
+- Botão Cancelar e Excluir (variant danger)
+- Feedback inline de erro
+
+### app/(tabs)/tournaments.tsx
+Tela de Torneios:
+- FlatList com TournamentCard para cada torneio
+- Pull to Refresh via RefreshControl
+- Botão "Carregar mais" para paginação
+- FAB (botão flutuante) para criar torneio
+- Modais de criação, edição e exclusão
+- Loading state (full screen enquanto carrega)
+- Error state (com botão "Tentar novamente")
+- Empty state (quando não há torneios)
+- Ações de editar/excluir visíveis apenas para owner e status WAITING
+
+### features/dashboard/components/tournament-list-item.tsx
+Atualizado para refletir os novos campos da API:
+- Status: `WAITING | STARTED | FINISHED` (antes `pending | in_progress | completed`)
+- Participantes: `_count.participants` e `maxPlayers` (antes `currentParticipants` e `maxParticipants`)
