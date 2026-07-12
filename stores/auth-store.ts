@@ -14,6 +14,7 @@ interface AuthState {
   saveSession: (token: string, user: User) => Promise<void>
   restoreSession: () => Promise<void>
   logout: () => Promise<void>
+  updateUser: (userData: User) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -53,5 +54,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await storage.remove(STORAGE_KEYS.AUTH_TOKEN)
     await storage.remove(STORAGE_KEYS.AUTH_USER)
     set({ token: null, user: null, isAuthenticated: false })
+  },
+
+  updateUser: async (userData: User) => {
+    await storage.set(STORAGE_KEYS.AUTH_USER, userData)
+    set({ user: userData })
   },
 }))

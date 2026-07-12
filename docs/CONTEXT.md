@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 02
+Sprint 03
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 03 — Perfil (Visualizar perfil, Alterar nome, Alterar senha, Atualizar avatar).
+Sprint 04 — Torneios (Listar torneios, Criar torneio, Detalhes do torneio).
 
 ---
 
@@ -744,3 +744,105 @@ Tela de Dashboard:
 - Header com cards de estatísticas (Torneios, Partidas, Vitórias, Aproveitamento)
 - Lista de torneios recentes com TournamentListItem
 - EmptyState quando não há torneios
+
+---
+
+# Sprint 03 — Perfil
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Visualizar perfil (avatar, nome, email)
+- Alterar nome (modal com formulário validado)
+- Alterar senha (modal com formulário validado, 3 campos: atual, nova, confirmar)
+- Atualizar avatar (Image Picker + upload multipart/form-data)
+- Logout com confirmação (Alert)
+- Loading state (enquanto carrega perfil)
+- Error state (feedback inline nos modais)
+- Success state (feedback inline nos modais)
+- Persistência do usuário atualizado no AsyncStorage via `updateUser()`
+
+## Arquivos criados
+
+### Features/profile/
+- features/profile/types/profile-types.ts
+- features/profile/services/profile-service.ts
+- features/profile/viewmodels/use-profile-viewmodel.ts
+- features/profile/viewmodels/use-update-name-viewmodel.ts
+- features/profile/viewmodels/use-update-password-viewmodel.ts
+- features/profile/viewmodels/use-update-avatar-viewmodel.ts
+- features/profile/components/profile-header.tsx
+- features/profile/components/profile-menu-item.tsx
+
+## Arquivos modificados
+
+- stores/auth-store.ts — adicionado método `updateUser(userData)` que persiste no AsyncStorage e atualiza o estado
+- app/(tabs)/profile.tsx — implementado perfil completo com ProfileHeader, menu items, modais de edição, Image Picker, logout
+
+## Explicação dos arquivos
+
+### features/profile/types/profile-types.ts
+Tipos específicos da feature de perfil:
+- `UpdateNameRequest`: name
+- `UpdatePasswordRequest`: currentPassword, newPassword
+
+### features/profile/services/profile-service.ts
+Service de comunicação com a API de perfil:
+- `getProfile()`: GET /profile/me — retorna dados do usuário
+- `updateName(data)`: PUT /profile/update — atualiza nome
+- `updatePassword(data)`: PUT /profile/password — altera senha
+- `updateAvatar(uri)`: PUT /profile/avatar — upload de avatar via multipart/form-data
+
+### features/profile/viewmodels/use-profile-viewmodel.ts
+ViewModel de visualização do perfil:
+- Usa `useQuery` com `enabled: false` (dados já estão no store)
+- Retorna: user, isLoading, error, refetch
+
+### features/profile/viewmodels/use-update-name-viewmodel.ts
+ViewModel de atualização de nome:
+- Usa `useMutation` para chamar `profileService.updateName()`
+- On success: atualiza o store via `updateUser()` e invalida query de perfil
+- Retorna: updateName(data), isLoading, error, isSuccess, clearError
+
+### features/profile/viewmodels/use-update-password-viewmodel.ts
+ViewModel de alteração de senha:
+- Usa `useMutation` para chamar `profileService.updatePassword()`
+- Retorna: updatePassword(data), isLoading, error, isSuccess, clearError
+
+### features/profile/viewmodels/use-update-avatar-viewmodel.ts
+ViewModel de atualização de avatar:
+- Usa `useMutation` para chamar `profileService.updateAvatar(uri)`
+- On success: atualiza o store via `updateUser()`
+- Retorna: updateAvatar(uri), isLoading, error, isSuccess, clearError
+
+### features/profile/components/profile-header.tsx
+Componente de cabeçalho do perfil:
+- Exibe avatar (com botão de câmera sobreposto), nome e email
+- Botão de editar avatar aciona callback onEditAvatar
+
+### features/profile/components/profile-menu-item.tsx
+Componente de item de menu do perfil:
+- Ícone, label e seta de navegação
+- Suporte a variante danger (cor vermelha)
+
+### stores/auth-store.ts
+Adicionado método `updateUser(userData)`:
+- Persiste o usuário atualizado no AsyncStorage
+- Atualiza o estado global
+
+### app/(tabs)/profile.tsx
+Tela de Perfil:
+- Exibe ProfileHeader com avatar, nome e email
+- Botão de editar avatar abre Image Picker (permissão, galeria, crop 1:1)
+- Menu "Alterar Nome" abre modal com formulário validado (Zod: mínimo 3 caracteres)
+- Menu "Alterar Senha" abre modal com 3 campos (atual, nova, confirmar) validados (Zod: mínimo 6, senhas coincidem)
+- Menu "Sair" com Alert de confirmação
+- Feedback inline de erro e sucesso nos modais
+- Loading overlay durante upload de avatar
