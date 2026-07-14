@@ -12,6 +12,8 @@ import { TournamentDetailHeader } from '@/features/tournaments/components/tourna
 import { ParticipantListItem } from '@/features/tournaments/components/participant-list-item'
 import { useTournamentDetailViewModel } from '@/features/tournaments/viewmodels/use-tournament-detail-viewmodel'
 import { useStartTournamentViewModel } from '@/features/tournaments/viewmodels/use-start-tournament-viewmodel'
+import { useJoinTournamentViewModel } from '@/features/participants/viewmodels/use-join-tournament-viewmodel'
+import { useLeaveTournamentViewModel } from '@/features/participants/viewmodels/use-leave-tournament-viewmodel'
 import { useAuthStore } from '@/stores/auth-store'
 
 export default function TournamentDetailScreen() {
@@ -19,14 +21,17 @@ export default function TournamentDetailScreen() {
   const router = useRouter()
   const user = useAuthStore((state) => state.user)
 
+  const tournamentId = id ?? ''
+
   const {
     tournament,
     participants,
     participantsTotal,
+    isParticipant,
     isLoading,
     error,
     refresh,
-  } = useTournamentDetailViewModel(id ?? '')
+  } = useTournamentDetailViewModel(tournamentId, user?.id)
 
   const {
     start,
@@ -36,11 +41,33 @@ export default function TournamentDetailScreen() {
     clearError: clearStartError,
   } = useStartTournamentViewModel()
 
+  const {
+    join,
+    isLoading: isJoining,
+    error: joinError,
+    isSuccess: joinSuccess,
+    clearError: clearJoinError,
+  } = useJoinTournamentViewModel()
+
+  const {
+    leave,
+    isLoading: isLeaving,
+    error: leaveError,
+    isSuccess: leaveSuccess,
+    clearError: clearLeaveError,
+  } = useLeaveTournamentViewModel()
+
   useEffect(() => {
     if (startSuccess) {
       refresh()
     }
   }, [startSuccess])
+
+  useEffect(() => {
+    if (joinSuccess || leaveSuccess) {
+      refresh()
+    }
+  }, [joinSuccess, leaveSuccess])
 
   const handleStartTournament = () => {
     Alert.alert(
@@ -53,7 +80,30 @@ export default function TournamentDetailScreen() {
           style: 'destructive',
           onPress: async () => {
             clearStartError()
-            await start(id ?? '')
+            await start(tournamentId)
+          },
+        },
+      ],
+    )
+  }
+
+  const handleJoinTournament = async () => {
+    clearJoinError()
+    await join(tournamentId)
+  }
+
+  const handleLeaveTournament = () => {
+    Alert.alert(
+      'Sair do Torneio',
+      'Tem certeza que deseja sair deste torneio?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: async () => {
+            clearLeaveError()
+            await leave(tournamentId)
           },
         },
       ],
@@ -82,6 +132,8 @@ export default function TournamentDetailScreen() {
   const isOwner = user?.id === tournament.ownerId
   const canEdit = isOwner && tournament.status === 'WAITING'
   const canStart = isOwner && tournament.status === 'WAITING' && tournament._count.participants >= 2
+  const canJoin = !isOwner && !isParticipant && tournament.status === 'WAITING'
+  const canLeave = !isOwner && isParticipant && tournament.status === 'WAITING'
 
   return (
     <ScreenContainer>
@@ -98,12 +150,59 @@ export default function TournamentDetailScreen() {
           </View>
         )}
 
+        {joinError && (
+          <View className="bg-red-50 rounded-lg p-3 mb-4">
+            <Text className="text-red-600 text-sm">
+              {joinError instanceof Error ? joinError.message : 'Erro ao entrar no torneio'}
+            </Text>
+          </View>
+        )}
+
+        {leaveError && (
+          <View className="bg-red-50 rounded-lg p-3 mb-4">
+            <Text className="text-red-600 text-sm">
+              {leaveError instanceof Error ? leaveError.message : 'Erro ao sair do torneio'}
+            </Text>
+          </View>
+        )}
+
+        {canJoin && (
+          <View className="mb-4">
+            <Button
+              title="Entrar no Torneio"
+              onPress={handleJoinTournament}
+              loading={isJoining}
+            />
+          </View>
+        )}
+
+        {canLeave && (
+          <View className="mb-4">
+            <Button
+              title="Sair do Torneio"
+              variant="danger"
+              onPress={handleLeaveTournament}
+              loading={isLeaving}
+            />
+          </View>
+        )}
+
         {canStart && (
           <View className="mb-4">
             <Button
               title="Iniciar Torneio"
               onPress={handleStartTournament}
               loading={isStarting}
+            />
+          </View>
+        )}
+
+        {tournament.status !== 'WAITING' && (
+          <View className="mb-4">
+            <Button
+              title="Ver Confrontos"
+              variant="secondary"
+              onPress={() => router.push(`/matches/${tournament.id}?ownerId=${tournament.ownerId}`)}
             />
           </View>
         )}

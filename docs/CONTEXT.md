@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 05
+Sprint 07
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 06 — Participantes (Entrar, Sair, Lista de participantes).
+Sprint 08 — Histórico (Lista, Detalhes, Campeões).
 
 ---
 
@@ -1089,3 +1089,184 @@ Tela de listagem de torneios modificada:
 - Adicionado `useRouter` e `useLocalSearchParams` para navegação e recebimento de parâmetros
 - `onPress` no TournamentCard: navega para `/tournaments/:id`
 - `useEffect` para detectar `editId` e `deleteId` passados como parâmetros e abrir modais correspondentes
+
+---
+
+# Sprint 06 — Participantes
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Entrar em torneio (POST /tournaments/:id/join) com botão condicional
+- Sair de torneio (POST /tournaments/:id/leave) com confirmação via Alert
+- Botão "Entrar no Torneio" visível apenas para não owner, não participante, status WAITING
+- Botão "Sair do Torneio" visível apenas para não owner, participante, status WAITING
+- Feedback inline de erro nas ações de entrar e sair
+- Atualização automática da lista de participantes após entrar ou sair
+- Loading state nos botões de ação durante as mutations
+- Integração com a tela de detalhes do torneio
+
+## Arquivos criados
+
+### Features/participants/
+- features/participants/types/participant-types.ts
+- features/participants/services/participant-service.ts
+- features/participants/viewmodels/use-join-tournament-viewmodel.ts
+- features/participants/viewmodels/use-leave-tournament-viewmodel.ts
+
+## Arquivos modificados
+
+- features/tournaments/viewmodels/use-tournament-detail-viewmodel.ts — adicionado parâmetro `userId` e campo `isParticipant` derivado da comparação com a lista de participantes
+- app/tournaments/[id].tsx — adicionados botões Entrar e Sair com lógica condicional, viewmodels de join/leave, feedback de erro e refresh automático
+
+## Explicação dos arquivos
+
+### features/participants/types/participant-types.ts
+Tipos específicos da feature de participantes:
+- `JoinTournamentResponse`: message, tournamentId, participantId
+- `LeaveTournamentResponse`: message, tournamentId
+
+### features/participants/services/participant-service.ts
+Service de comunicação com a API de participantes:
+- `join(tournamentId)`: POST /tournaments/:id/join — inscreve o usuário no torneio
+- `leave(tournamentId)`: POST /tournaments/:id/leave — remove o usuário do torneio
+
+### features/participants/viewmodels/use-join-tournament-viewmodel.ts
+ViewModel de entrada em torneio:
+- Usa `useMutation` para chamar `participantService.join()`
+- On success: invalida queries `['tournament-participants']`, `['tournament-details']` e `['tournaments']`
+- Retorna: join(tournamentId), isLoading, error, isSuccess, data, clearError
+
+### features/participants/viewmodels/use-leave-tournament-viewmodel.ts
+ViewModel de saída de torneio:
+- Usa `useMutation` para chamar `participantService.leave()`
+- On success: invalida queries `['tournament-participants']`, `['tournament-details']` e `['tournaments']`
+- Retorna: leave(tournamentId), isLoading, error, isSuccess, data, clearError
+
+### features/tournaments/viewmodels/use-tournament-detail-viewmodel.ts
+ViewModel de detalhes do torneio modificada:
+- Adicionado segundo parâmetro opcional `userId?: string`
+- Calcula `isParticipant: boolean` verificando se `userId` existe na lista de participantes
+- Retorna: isParticipant
+
+### app/tournaments/[id].tsx
+Tela de detalhes do torneio modificada:
+- Passa `user.id` para o viewmodel de detalhes
+- Importa e utiliza `useJoinTournamentViewModel` e `useLeaveTournamentViewModel`
+- Botão "Entrar no Torneio": visível quando `canJoin` (não owner, não participante, WAITING), executa join com loading e feedback de erro
+- Botão "Sair do Torneio": visível quando `canLeave` (não owner, participante, WAITING), confirma via Alert antes de executar leave
+- Botão "Ver Confrontos": visível quando torneio não está WAITING, navega para `/matches/:id?ownerId=`
+- Efeito `useEffect` para refresh automático após join ou leave bem-sucedidos
+
+---
+
+# Sprint 07 — Confrontos
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Listagem de partidas agrupadas por rodada via SectionList
+- Visualização do chaveamento (rounds numerados, partidas com posição)
+- Card de partida com jogadores, status (Badge) e destaque do vencedor
+- Modal de seleção de vencedor (playerOne vs playerTwo)
+- Registro de vencedor via PUT /matches/:id (apenas owner, partidas não finalizadas)
+- Atualização automática da lista após registrar vencedor
+- Loading, Error e Empty states na tela de confrontos
+- Pull to Refresh na listagem
+- Botão "Ver Confrontos" na tela de detalhes do torneio (visível quando status não é WAITING)
+
+## Arquivos criados
+
+### Rotas (app/)
+- app/matches/[id].tsx
+
+### Features/matches/
+- features/matches/types/match-types.ts
+- features/matches/services/match-service.ts
+- features/matches/viewmodels/use-matches-list-viewmodel.ts
+- features/matches/viewmodels/use-update-match-viewmodel.ts
+- features/matches/components/round-section.tsx
+- features/matches/components/match-card.tsx
+- features/matches/components/select-winner-modal.tsx
+
+## Arquivos modificados
+
+- app/tournaments/[id].tsx — adicionado botão "Ver Confrontos" com navegação para `/matches/:id?ownerId=`
+
+## Explicação dos arquivos
+
+### features/matches/types/match-types.ts
+Tipos específicos da feature de confrontos:
+- `MatchPlayer`: id, name, avatar
+- `MatchStatus`: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
+- `Match`: id, tournamentId, round, position, playerOne, playerTwo, winnerId, status
+- `MatchesListResponse`: tournamentId, tournamentName, matches[], total
+- `UpdateMatchRequest`: winnerId
+- `UpdateMatchResponse`: message, match
+
+### features/matches/services/match-service.ts
+Service de comunicação com a API de confrontos:
+- `list(tournamentId)`: GET /tournaments/:id/matches — retorna lista de partidas
+- `update(matchId, data)`: PUT /matches/:id — registra vencedor da partida
+
+### features/matches/viewmodels/use-matches-list-viewmodel.ts
+ViewModel de listagem de confrontos:
+- `useQuery` com chave `['tournament-matches', tournamentId]`
+- Função `groupByRound()` agrupa partidas por round e ordena
+- Retorna: rounds (GroupedMatches[]), total, tournamentName, isLoading, isRefetching, error, refresh
+
+### features/matches/viewmodels/use-update-match-viewmodel.ts
+ViewModel de atualização de partida:
+- `useMutation` para chamar `matchService.update(matchId, data)`
+- On success: invalida query `['tournament-matches']`
+- Retorna: update({ matchId, data }), isLoading, error, isSuccess, data, clearError
+
+### features/matches/components/round-section.tsx
+Componente de cabeçalho de rodada:
+- Círculo numerado verde com número do round
+- Texto "Final" para round 1, "Rodada X" para demais
+- Divider abaixo do título
+
+### features/matches/components/match-card.tsx
+Componente de card de partida:
+- Exibe Badge de status (PENDING → warning, IN_PROGRESS → info, COMPLETED → success)
+- Colunas dos dois jogadores com avatar (inicial), nome e destaque do vencedor (troféu)
+- VS entre os jogadores
+- Partidas COMPLETED com borda verde
+- Dica "Toque para registrar vencedor" apenas para owner e partidas não finalizadas
+- TouchableOpacity que abre modal de seleção via callback
+
+### features/matches/components/select-winner-modal.tsx
+Modal de seleção de vencedor:
+- Fundo escuro semi-transparente (fechável ao tocar fora)
+- Dois cards lado a lado com avatar e nome de cada jogador
+- Loading spinner durante a mutation
+- Feedback inline de erro
+- Botão Cancelar
+
+### app/matches/[id].tsx
+Tela de confrontos:
+- Recebe `id` (tournamentId) e `ownerId` via `useLocalSearchParams`
+- Calcula `isOwner` comparando user.id com ownerId
+- Consome `useMatchesListViewModel` e `useUpdateMatchViewModel`
+- SectionList com rounds como seções e MatchCard como itens
+- SelectWinnerModal controlado por estado (selectedMatchId, selectedPlayerOne, selectedPlayerTwo)
+- `handleSelectWinner`: abre modal com dados dos jogadores
+- `handleConfirmWinner`: executa mutation update
+- `handleCloseModal`: limpa estado do modal (bloqueado durante loading)
+- Loading, Error, Empty states
+- Pull to Refresh via RefreshControl

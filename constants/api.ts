@@ -28,8 +28,8 @@ export const ENDPOINTS = {
   },
   participants: {
     list: (tournamentId: string) => `/tournaments/${tournamentId}/participants`,
-    join: (tournamentId: string) => `/tournaments/${tournamentId}/participants`,
-    leave: (tournamentId: string) => `/tournaments/${tournamentId}/participants`,
+    join: (tournamentId: string) => `/tournaments/${tournamentId}/join`,
+    leave: (tournamentId: string) => `/tournaments/${tournamentId}/leave`,
   },
   matches: {
     list: (tournamentId: string) => `/tournaments/${tournamentId}/matches`,
