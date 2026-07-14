@@ -1171,7 +1171,7 @@ Tela de detalhes do torneio modificada:
 
 ## Status
 
-Concluída.
+Concluída (com fix pós-Sprint 09).
 
 ## Dependências instaladas
 
@@ -1221,7 +1221,7 @@ Tipos específicos da feature de confrontos:
 ### features/matches/services/match-service.ts
 Service de comunicação com a API de confrontos:
 - `list(tournamentId)`: GET /tournaments/:id/matches — retorna lista de partidas
-- `update(matchId, data)`: PUT /matches/:id — registra vencedor da partida
+- `update(matchId, data)`: PUT /matches/:id/result — registra vencedor da partida
 
 ### features/matches/viewmodels/use-matches-list-viewmodel.ts
 ViewModel de listagem de confrontos:
