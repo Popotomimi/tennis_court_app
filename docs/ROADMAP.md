@@ -159,6 +159,8 @@ Implementar:
 - Feedback visual
 - Tratamento de erros
 - Animações
+- Tema dark
+- SafeAreaView
 
 ---
 
