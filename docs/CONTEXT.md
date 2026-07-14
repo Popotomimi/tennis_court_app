@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 08
+Sprint 09
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 09 — Estatísticas.
+Sprint 10 — Experiência do Usuário (Skeleton, Toast, Bottom Sheet, Feedback visual, Tratamento de erros, Animações, Tema dark, SafeAreaView).
 
 ---
 
@@ -1270,6 +1270,99 @@ Tela de confrontos:
 - `handleCloseModal`: limpa estado do modal (bloqueado durante loading)
 - Loading, Error, Empty states
 - Pull to Refresh via RefreshControl
+
+---
+
+# Sprint 09 — Estatísticas
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Tela dedicada de estatísticas com header do usuário (avatar, nome, email)
+- Anel circular de progresso para Win Rate com cor dinâmica (verde ≥70%, amarelo ≥40%, vermelho <40%) e label textual
+- Cards de estatísticas (Torneios, Partidas, Vitórias, Derrotas) com ícones e cores
+- Indicadores de desempenho com barras de progresso horizontais (Vitórias vs Derrotas)
+- Loading, Error e Empty states na tela de estatísticas
+- Navegação a partir do menu "Estatísticas" na tela de Perfil
+- Suporte a usuário sem dados (empty state com mensagem)
+
+## Arquivos criados
+
+### Features/statistics/
+- features/statistics/types/statistics-types.ts
+- features/statistics/services/statistics-service.ts
+- features/statistics/viewmodels/use-statistics-viewmodel.ts
+- features/statistics/components/stat-card.tsx
+- features/statistics/components/win-rate-ring.tsx
+- features/statistics/components/stat-indicator.tsx
+- features/statistics/components/statistics-header.tsx
+
+### Routes
+- app/statistics/index.tsx
+
+## Arquivos modificados
+
+- app/(tabs)/profile.tsx — adicionado item de menu "Estatísticas" com ícone bar-chart-outline entre "Alterar Senha" e o Divider
+- docs/CONTEXT.md — atualizado status da Sprint 09
+
+## Explicação dos arquivos
+
+### features/statistics/types/statistics-types.ts
+Tipos específicos da feature de estatísticas:
+- `UserStatistics`: totalTournaments, totalMatches, wins, losses, winRate
+
+### features/statistics/services/statistics-service.ts
+Service de comunicação com a API de estatísticas:
+- `getStatistics()`: GET /statistics/me — retorna estatísticas do usuário
+
+### features/statistics/viewmodels/use-statistics-viewmodel.ts
+ViewModel da tela de estatísticas:
+- `useQuery` com chave `['statistics']`
+- Retorna: statistics, isLoading, error, refresh
+
+### features/statistics/components/stat-card.tsx
+Componente de card de estatística individual:
+- Ícone em círculo colorido, valor em destaque, label descritiva
+- Props: icon, label, value, color, bgColor
+- Utiliza o componente `Card` reutilizável
+
+### features/statistics/components/win-rate-ring.tsx
+Componente de anel circular de progresso:
+- Círculo externo colorido com padding, círculo interno branco com percentual
+- Cor dinâmica: verde (≥70%), amarelo (≥40%), vermelho (<40%)
+- Label textual: "Excelente", "Muito Bom", "Regular", "Ruim", "Crítico"
+- Implementado com Views nativas (sem SVG), 100% compatível Android/iOS
+
+### features/statistics/components/stat-indicator.tsx
+Componente de barra de progresso horizontal:
+- Label, barra de progresso colorida, valor numérico
+- Props: label, value, maxValue, color, bgColor
+- Utilizado para exibir Vitórias e Derrotas lado a lado
+
+### features/statistics/components/statistics-header.tsx
+Componente de cabeçalho da tela de estatísticas:
+- Avatar (grande), nome e email do usuário autenticado
+- Utiliza o componente `Avatar` reutilizável
+
+### app/statistics/index.tsx
+Tela de estatísticas:
+- ScrollView com StatisticsHeader, WinRateRing, grid de StatCards (2x2), barras de StatIndicator
+- Loading state (full screen) enquanto carrega
+- Error state com botão "Tentar novamente" se a API falhar
+- Empty state quando não há dados (totalMatches = 0)
+- Consome `useStatisticsViewModel` e `useAuthStore`
+
+### app/(tabs)/profile.tsx
+Tela de Perfil modificada:
+- Adicionado ProfileMenuItem "Estatísticas" com ícone bar-chart-outline
+- Navega para `/statistics` via `router.push`
 
 ---
 
