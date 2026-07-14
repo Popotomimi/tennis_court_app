@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 07
+Sprint 08
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 08 — Histórico (Lista, Detalhes, Campeões).
+Sprint 09 — Estatísticas.
 
 ---
 
@@ -1270,3 +1270,111 @@ Tela de confrontos:
 - `handleCloseModal`: limpa estado do modal (bloqueado durante loading)
 - Loading, Error, Empty states
 - Pull to Refresh via RefreshControl
+
+---
+
+# Sprint 08 — Histórico
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- Listagem de torneios finalizados na aba Histórico (FlatList, Pull to Refresh)
+- Card de histórico com nome, champion (troféu) e data formatada pt-BR
+- Tela de detalhes do histórico com header (nome, descrição, campeão em destaque, cards de participantes/partidas)
+- Partidas do histórico agrupadas por rodada (SectionList) com resultado e vencedor destacado
+- Loading, Error e Empty states na listagem e nos detalhes
+- Navegação da aba Histórico para detalhes via rota dinâmica `/history/:id`
+- Suporte a torneios sem campeão definido (fallback visual)
+
+## Arquivos criados
+
+### Types
+- features/history/types/history-types.ts
+
+### Service
+- features/history/services/history-service.ts
+
+### ViewModels
+- features/history/viewmodels/use-history-list-viewmodel.ts
+- features/history/viewmodels/use-history-detail-viewmodel.ts
+
+### Components
+- features/history/components/history-card.tsx
+- features/history/components/history-detail-header.tsx
+- features/history/components/history-match-item.tsx
+
+### Routes
+- app/history/[id].tsx
+
+## Arquivos modificados
+
+- app/(tabs)/history.tsx — substituído placeholder por FlatList completa com HistoryCard, Loading/Error/Empty states, Pull to Refresh e navegação para `/history/:id`
+- docs/CONTEXT.md — atualizado status da Sprint 08
+
+## Explicação dos arquivos
+
+### features/history/types/history-types.ts
+Tipos específicos da feature de histórico:
+- `HistoryChampion`: id, name, avatar
+- `HistoryItem`: id, tournamentId, tournamentName, champion (HistoryChampion | null), finishedAt, totalParticipants
+- `HistoryListResponse`: tournaments[], total
+- `HistoryMatch`: id, round, position, playerOne/playerTwo (id, name, avatar), winnerId, status
+- `HistoryDetail`: id, tournamentId, tournamentName, description, champion, finishedAt, participants[], matches[], totalParticipants, totalMatches
+
+### features/history/services/history-service.ts
+Service de comunicação com a API de histórico:
+- `list()`: GET /history — retorna torneios finalizados
+- `getDetails(id)`: GET /history/:id — retorna detalhes do torneio finalizado
+
+### features/history/viewmodels/use-history-list-viewmodel.ts
+ViewModel de listagem do histórico:
+- `useQuery` com chave `['history']`
+- Retorna: tournaments, total, isLoading, isRefetching, error, refresh
+
+### features/history/viewmodels/use-history-detail-viewmodel.ts
+ViewModel de detalhes do histórico:
+- `useQuery` com chave `['history-detail', id]`, enabled: !!id
+- Retorna: detail, isLoading, error, refresh
+
+### features/history/components/history-card.tsx
+Card de item do histórico:
+- Nome do torneio, badge "Finalizado", data formatada pt-BR
+- Campeão destacado com fundo amarelo, troféu e nome (ou fallback "Sem campeão definido")
+- Contagem de participantes
+- TouchableOpacity para navegação aos detalhes
+
+### features/history/components/history-detail-header.tsx
+Header da tela de detalhes:
+- Nome do torneio, descrição, data de finalização
+- Card do campeão em destaque (fundo amarelo, avatar com inicial, troféu, nome, total de participantes e partidas)
+- Cards de métricas: Participantes e Partidas
+
+### features/history/components/history-match-item.tsx
+Item de partida no histórico (read-only):
+- Card com rodada, status (Finalizada/Pendente)
+- Player columns com avatar, nome e destaque do vencedor (troféu verde)
+- Suporte a BYE (playerTwo null) com placeholder visual
+
+### app/history/[id].tsx
+Tela de detalhes do histórico:
+- Recebe `id` via `useLocalSearchParams`
+- SectionList com HistoryDetailHeader como ListHeaderComponent
+- Partidas agrupadas por rodada com HistoryMatchItem
+- Loading, Error, Empty states
+
+### app/(tabs)/history.tsx
+Tela de listagem do histórico:
+- FlatList com HistoryCard
+- Pull to Refresh via RefreshControl
+- Navegação para `/history/:id` ao tocar em um card
+- Loading (full screen), Error (com retry), Empty (com mensagem) states
+- Header com título "Histórico" e total de torneios
+
+---
