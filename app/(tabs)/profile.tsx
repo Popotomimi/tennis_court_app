@@ -178,6 +178,12 @@ export default function ProfileScreen() {
               setShowPasswordModal(true)
             }}
           />
+
+          <ProfileMenuItem
+            icon="bar-chart-outline"
+            label="Estatísticas"
+            onPress={() => router.push('/statistics')}
+          />
         </View>
 
         <Divider className="my-6" />
