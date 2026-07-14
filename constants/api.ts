@@ -33,7 +33,7 @@ export const ENDPOINTS = {
   },
   matches: {
     list: (tournamentId: string) => `/tournaments/${tournamentId}/matches`,
-    update: (matchId: string) => `/matches/${matchId}`,
+    update: (matchId: string) => `/matches/${matchId}/result`,
   },
   history: {
     list: '/history',
