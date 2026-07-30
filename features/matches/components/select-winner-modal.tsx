@@ -29,20 +29,20 @@ export function SelectWinnerModal({
         onPress={onClose}
       >
         <TouchableOpacity
-          className="bg-white rounded-xl w-80 p-6"
+          className="bg-white dark:bg-gray-800 rounded-xl w-80 p-6"
           activeOpacity={1}
           onPress={() => {}}
         >
-          <Text className="text-lg font-bold text-gray-800 text-center mb-1">
+          <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 text-center mb-1">
             Registrar Vencedor
           </Text>
-          <Text className="text-sm text-gray-500 text-center mb-5">
+          <Text className="text-sm text-gray-500 dark:text-gray-400 text-center mb-5">
             Selecione o vencedor desta partida
           </Text>
 
           {error && (
-            <View className="bg-red-50 rounded-lg p-3 mb-4">
-              <Text className="text-red-600 text-sm text-center">
+            <View className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 mb-4">
+              <Text className="text-red-600 dark:text-red-400 text-sm text-center">
                 {error instanceof Error ? error.message : 'Erro ao registrar vencedor'}
               </Text>
             </View>
@@ -55,12 +55,12 @@ export function SelectWinnerModal({
                 onPress={() => onSelect(playerOne.id)}
                 disabled={isLoading}
               >
-                <View className="w-12 h-12 rounded-full bg-green-100 items-center justify-center mb-2">
-                  <Text className="text-green-700 font-bold text-lg">
+                <View className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 items-center justify-center mb-2">
+                  <Text className="text-green-700 dark:text-green-400 font-bold text-lg">
                     {playerOne.name.charAt(0).toUpperCase()}
                   </Text>
                 </View>
-                <Text className="text-sm font-medium text-gray-800 text-center" numberOfLines={2}>
+                <Text className="text-sm font-medium text-gray-800 dark:text-gray-100 text-center" numberOfLines={2}>
                   {playerOne.name}
                 </Text>
               </TouchableOpacity>
@@ -72,12 +72,12 @@ export function SelectWinnerModal({
                 onPress={() => onSelect(playerTwo.id)}
                 disabled={isLoading}
               >
-                <View className="w-12 h-12 rounded-full bg-blue-100 items-center justify-center mb-2">
-                  <Text className="text-blue-700 font-bold text-lg">
+                <View className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 items-center justify-center mb-2">
+                  <Text className="text-blue-700 dark:text-blue-400 font-bold text-lg">
                     {playerTwo.name.charAt(0).toUpperCase()}
                   </Text>
                 </View>
-                <Text className="text-sm font-medium text-gray-800 text-center" numberOfLines={2}>
+                <Text className="text-sm font-medium text-gray-800 dark:text-gray-100 text-center" numberOfLines={2}>
                   {playerTwo.name}
                 </Text>
               </TouchableOpacity>

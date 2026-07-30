@@ -45,4 +45,12 @@ export const colors = {
   black: '#000000',
   background: '#f9fafb',
   foreground: '#111827',
+  dark: {
+    background: '#0f172a',
+    foreground: '#f1f5f9',
+    card: '#1e293b',
+    border: '#334155',
+    muted: '#64748b',
+    mutedForeground: '#94a3b8',
+  },
 }

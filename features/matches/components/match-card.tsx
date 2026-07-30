@@ -20,7 +20,7 @@ function PlayerColumn({ player, isWinner }: { player: MatchPlayer | null; isWinn
   if (!player) {
     return (
       <View className="flex-1 items-center">
-        <View className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center mb-1">
+        <View className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 items-center justify-center mb-1">
           <Ionicons name="close-outline" size={20} color="#9CA3AF" />
         </View>
         <Text className="text-xs text-gray-400 text-center">Aguardando</Text>
@@ -30,12 +30,12 @@ function PlayerColumn({ player, isWinner }: { player: MatchPlayer | null; isWinn
 
   return (
     <View className={`flex-1 items-center ${isWinner ? 'opacity-100' : 'opacity-60'}`}>
-      <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${isWinner ? 'bg-green-100' : 'bg-gray-100'}`}>
-        <Text className={`font-bold text-sm ${isWinner ? 'text-green-700' : 'text-gray-500'}`}>
+      <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${isWinner ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-700'}`}>
+        <Text className={`font-bold text-sm ${isWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
           {player.name.charAt(0).toUpperCase()}
         </Text>
       </View>
-      <Text className={`text-xs text-center font-medium ${isWinner ? 'text-green-700' : 'text-gray-600'}`} numberOfLines={1}>
+      <Text className={`text-xs text-center font-medium ${isWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`} numberOfLines={1}>
         {player.name}
       </Text>
       {isWinner && (
@@ -69,7 +69,7 @@ export function MatchCard({ match, isOwner, onSelectWinner }: MatchCardProps) {
         <View className="flex-row items-center justify-between mb-3">
           <Badge label={config.label} variant={config.variant} />
           {match.position !== undefined && (
-            <Text className="text-xs text-gray-400">#P{String(match.position).padStart(2, '0')}</Text>
+            <Text className="text-xs text-gray-400 dark:text-gray-500">#P{String(match.position).padStart(2, '0')}</Text>
           )}
         </View>
 
@@ -80,7 +80,7 @@ export function MatchCard({ match, isOwner, onSelectWinner }: MatchCardProps) {
           />
 
           <View className="px-4 items-center">
-            <Text className="text-sm font-bold text-gray-400">VS</Text>
+            <Text className="text-sm font-bold text-gray-400 dark:text-gray-500">VS</Text>
           </View>
 
           <PlayerColumn
@@ -90,7 +90,7 @@ export function MatchCard({ match, isOwner, onSelectWinner }: MatchCardProps) {
         </View>
 
         {isOwner && !isCompleted && match.playerOne && match.playerTwo && (
-          <View className="mt-3 pt-3 border-t border-gray-100">
+          <View className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
             <View className="flex-row items-center justify-center gap-1">
               <Ionicons name="hand-left-outline" size={14} color="#6B7280" />
               <Text className="text-xs text-gray-500">Toque para registrar vencedor</Text>

@@ -16,14 +16,14 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
   return (
     <View>
       <View className="mb-4">
-        <Text className="text-2xl font-bold text-gray-800">{detail.tournamentName}</Text>
+        <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">{detail.tournamentName}</Text>
         {detail.description && (
-          <Text className="text-sm text-gray-500 mt-1">{detail.description}</Text>
+          <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">{detail.description}</Text>
         )}
-        <Text className="text-xs text-gray-400 mt-2">Finalizado em {finishedDate}</Text>
+        <Text className="text-xs text-gray-400 dark:text-gray-500 mt-2">Finalizado em {finishedDate}</Text>
       </View>
 
-      <View className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4">
+      <View className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-4">
         <View className="flex-row items-center gap-2">
           <Ionicons name="trophy" size={24} color="#EAB308" />
           <Text className="text-base font-bold text-yellow-800">Campeão</Text>

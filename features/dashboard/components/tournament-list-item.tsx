@@ -20,15 +20,15 @@ export function TournamentListItem({ tournament }: TournamentListItemProps) {
   return (
     <Card className="flex-row items-center">
       <View className="flex-1">
-        <Text className="text-base font-semibold text-gray-800">{tournament.name}</Text>
+        <Text className="text-base font-semibold text-gray-800 dark:text-gray-100">{tournament.name}</Text>
         {tournament.description && (
-          <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>
+          <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1" numberOfLines={1}>
             {tournament.description}
           </Text>
         )}
         <View className="flex-row items-center mt-2">
           <Ionicons name="people-outline" size={14} color="#6b7280" />
-          <Text className="text-sm text-gray-500 ml-1">
+          <Text className="text-sm text-gray-500 dark:text-gray-400 ml-1">
             {tournament._count.participants}/{tournament.maxPlayers}
           </Text>
         </View>

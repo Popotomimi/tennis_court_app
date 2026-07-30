@@ -24,7 +24,7 @@ export function PasswordInput({
   return (
     <View className="gap-1">
       {label && (
-        <Text className="text-sm font-medium text-gray-700">{label}</Text>
+        <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</Text>
       )}
       <View className="relative">
         <TextInput
@@ -33,7 +33,7 @@ export function PasswordInput({
           placeholder={placeholder}
           placeholderTextColor="#9ca3af"
           secureTextEntry={!visible}
-          className={`border rounded-lg px-4 py-3 text-base bg-white pr-12 ${error ? 'border-red-500' : 'border-gray-300'}`}
+          className={`border rounded-lg px-4 py-3 text-base bg-white dark:bg-gray-800 dark:text-gray-100 pr-12 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
           accessibilityLabel={label || placeholder}
         />
         <TouchableOpacity

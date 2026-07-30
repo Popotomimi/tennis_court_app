@@ -47,13 +47,13 @@ export function CreateTournamentModal({ visible, onClose }: CreateTournamentModa
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View className="flex-1 bg-black/50 justify-end">
-        <View className="bg-white rounded-t-2xl p-6">
-          <Text className="text-lg font-bold text-gray-800 mb-6">
+        <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+          <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-6">
             Criar Torneio
           </Text>
 
           {error && (
-            <Text className="text-red-500 text-sm mb-4">
+            <Text className="text-red-500 dark:text-red-400 text-sm mb-4">
               {error instanceof Error ? error.message : 'Erro ao criar torneio'}
             </Text>
           )}

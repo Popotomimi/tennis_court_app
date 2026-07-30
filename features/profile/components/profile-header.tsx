@@ -17,8 +17,8 @@ export function ProfileHeader({ user, onEditAvatar }: ProfileHeaderProps) {
           <Ionicons name="camera" size={14} color="white" />
         </View>
       </TouchableOpacity>
-      <Text className="text-xl font-bold text-gray-800 mt-4">{user.name}</Text>
-      <Text className="text-sm text-gray-500 mt-1">{user.email}</Text>
+      <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mt-4">{user.name}</Text>
+      <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">{user.email}</Text>
     </View>
   )
 }

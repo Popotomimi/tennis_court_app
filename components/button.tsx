@@ -27,12 +27,12 @@ const variantStyles: Record<ButtonVariant, { button: string; text: string }> = {
     text: 'text-white',
   },
   outline: {
-    button: 'border border-green-600 active:bg-green-50',
-    text: 'text-green-600',
+    button: 'border border-green-600 active:bg-green-50 dark:active:bg-green-900/20',
+    text: 'text-green-600 dark:text-green-400',
   },
   ghost: {
-    button: 'active:bg-gray-100',
-    text: 'text-green-600',
+    button: 'active:bg-gray-100 dark:active:bg-gray-800',
+    text: 'text-green-600 dark:text-green-400',
   },
   danger: {
     button: 'bg-red-600 active:bg-red-700',

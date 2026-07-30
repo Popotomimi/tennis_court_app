@@ -12,9 +12,11 @@ import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { PasswordInput } from '@/components/password-input'
 import { Divider } from '@/components/divider'
+import { LoadingOverlay } from '@/components/loading-overlay'
 import { ProfileHeader } from '@/features/profile/components/profile-header'
 import { ProfileMenuItem } from '@/features/profile/components/profile-menu-item'
 import { useAuthStore } from '@/stores/auth-store'
+import { useThemeStore } from '@/stores/theme-store'
 import { useUpdateNameViewModel } from '@/features/profile/viewmodels/use-update-name-viewmodel'
 import { useUpdatePasswordViewModel } from '@/features/profile/viewmodels/use-update-password-viewmodel'
 import { useUpdateAvatarViewModel } from '@/features/profile/viewmodels/use-update-avatar-viewmodel'
@@ -64,6 +66,10 @@ export default function ProfileScreen() {
     updateAvatar,
     isLoading: isUpdatingAvatar,
   } = useUpdateAvatarViewModel()
+
+  const themeMode = useThemeStore((state) => state.mode)
+  const toggleTheme = useThemeStore((state) => state.toggle)
+  const isDark = themeMode === 'dark'
 
   const nameForm = useForm<NameFormData>({
     resolver: zodResolver(nameSchema),
@@ -152,7 +158,7 @@ export default function ProfileScreen() {
   return (
     <ScreenContainer>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <Text className="text-2xl font-bold text-gray-800 mt-6 mb-2">
+        <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-6 mb-2 ml-4">
           Perfil
         </Text>
 
@@ -184,6 +190,12 @@ export default function ProfileScreen() {
             label="Estatísticas"
             onPress={() => router.push('/statistics')}
           />
+
+          <ProfileMenuItem
+            icon={isDark ? 'sunny-outline' : 'moon-outline'}
+            label={isDark ? 'Tema Claro' : 'Tema Escuro'}
+            onPress={toggleTheme}
+          />
         </View>
 
         <Divider className="my-6" />
@@ -200,19 +212,19 @@ export default function ProfileScreen() {
 
       <Modal visible={showNameModal} animationType="slide" transparent>
         <View className="flex-1 bg-black/50 justify-end">
-          <View className="bg-white rounded-t-2xl p-6">
-            <Text className="text-lg font-bold text-gray-800 mb-6">
+          <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-6">
               Alterar Nome
             </Text>
 
             {nameError && (
-              <Text className="text-red-500 text-sm mb-4">
+              <Text className="text-red-500 dark:text-red-400 text-sm mb-4">
                 {nameError instanceof Error ? nameError.message : 'Erro ao atualizar nome'}
               </Text>
             )}
 
             {nameSuccess && (
-              <Text className="text-green-600 text-sm mb-4">
+              <Text className="text-green-600 dark:text-green-400 text-sm mb-4">
                 Nome atualizado com sucesso!
               </Text>
             )}
@@ -252,19 +264,19 @@ export default function ProfileScreen() {
 
       <Modal visible={showPasswordModal} animationType="slide" transparent>
         <View className="flex-1 bg-black/50 justify-end">
-          <View className="bg-white rounded-t-2xl p-6">
-            <Text className="text-lg font-bold text-gray-800 mb-6">
+          <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-6">
               Alterar Senha
             </Text>
 
             {passwordError && (
-              <Text className="text-red-500 text-sm mb-4">
+              <Text className="text-red-500 dark:text-red-400 text-sm mb-4">
                 {passwordError instanceof Error ? passwordError.message : 'Erro ao alterar senha'}
               </Text>
             )}
 
             {passwordSuccess && (
-              <Text className="text-green-600 text-sm mb-4">
+              <Text className="text-green-600 dark:text-green-400 text-sm mb-4">
                 Senha alterada com sucesso!
               </Text>
             )}
@@ -331,7 +343,7 @@ export default function ProfileScreen() {
         </View>
       </Modal>
 
-      {isUpdatingAvatar && <Loading message="Atualizando foto..." />}
+      <LoadingOverlay visible={isUpdatingAvatar} message="Atualizando foto..." />
     </ScreenContainer>
   )
 }

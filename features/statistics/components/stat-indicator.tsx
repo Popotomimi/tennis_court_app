@@ -14,14 +14,14 @@ export function StatIndicator({ label, value, maxValue, color, bgColor }: StatIn
 
   return (
     <View className="flex-row items-center gap-3">
-      <Text className="text-sm text-gray-600 w-20">{label}</Text>
+      <Text className="text-sm text-gray-600 dark:text-gray-400 w-20">{label}</Text>
       <View className="flex-1 h-3 rounded-full overflow-hidden" style={{ backgroundColor: bgColor }}>
         <View
           className="h-full rounded-full"
           style={{ width: `${percentage}%`, backgroundColor: color }}
         />
       </View>
-      <Text className="text-sm font-bold text-gray-800 w-10 text-right">{value}</Text>
+      <Text className="text-sm font-bold text-gray-800 dark:text-gray-100 w-10 text-right">{value}</Text>
     </View>
   )
 }

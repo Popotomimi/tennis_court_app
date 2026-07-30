@@ -27,8 +27,8 @@ export default function SplashScreen() {
   }, [isLoading, isAuthenticated, router])
 
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-2xl font-bold text-green-600">Tennis Court</Text>
+    <View className="flex-1 items-center justify-center bg-white dark:bg-gray-900">
+      <Text className="text-2xl font-bold text-green-600 dark:text-green-400">Tennis Court</Text>
       <ActivityIndicator size="large" color="#16a34a" className="mt-6" />
     </View>
   )

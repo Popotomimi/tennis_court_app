@@ -44,7 +44,7 @@ export function WinRateRing({ winRate, size = 140 }: WinRateRingProps) {
             width: innerSize,
             height: innerSize,
             borderRadius: innerSize / 2,
-            backgroundColor: 'white',
+            backgroundColor: '#ffffff',
             alignItems: 'center',
             justifyContent: 'center',
           }}

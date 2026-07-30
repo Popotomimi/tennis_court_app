@@ -32,16 +32,16 @@ export function DeleteTournamentConfirmation({
   return (
     <Modal visible={visible} animationType="fade" transparent>
       <View className="flex-1 bg-black/50 justify-center items-center px-6">
-        <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
-          <Text className="text-lg font-bold text-gray-800 mb-2">
+        <View className="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-sm">
+          <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">
             Excluir Torneio
           </Text>
-          <Text className="text-sm text-gray-500 mb-6">
+          <Text className="text-sm text-gray-500 dark:text-gray-400 mb-6">
             Tem certeza que deseja excluir o torneio "{tournamentName}"? Esta ação não pode ser desfeita.
           </Text>
 
           {error && (
-            <Text className="text-red-500 text-sm mb-4">
+            <Text className="text-red-500 dark:text-red-400 text-sm mb-4">
               {error instanceof Error ? error.message : 'Erro ao excluir torneio'}
             </Text>
           )}

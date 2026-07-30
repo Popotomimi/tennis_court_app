@@ -7,6 +7,8 @@ import { Divider } from '@/components/divider'
 import { useDashboardViewModel } from '@/features/dashboard/viewmodels/use-dashboard-viewmodel'
 import { StatCard } from '@/features/dashboard/components/stat-card'
 import { TournamentListItem } from '@/features/dashboard/components/tournament-list-item'
+import { StatCardSkeleton } from '@/components/stat-card-skeleton'
+import { ListSkeleton } from '@/components/list-skeleton'
 
 export default function HomeScreen() {
   const {
@@ -19,7 +21,20 @@ export default function HomeScreen() {
   } = useDashboardViewModel()
 
   if (isLoading && !statistics && !tournaments) {
-    return <Loading fullScreen message="Carregando dashboard..." />
+    return (
+      <ScreenContainer>
+        <View className="px-4 pt-6">
+          <View className="h-8 w-40 bg-gray-200 dark:bg-gray-700 rounded-lg mb-6" />
+          <View className="flex-row gap-3 mb-6">
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </View>
+          <ListSkeleton count={3} />
+        </View>
+      </ScreenContainer>
+    )
   }
 
   if (error && !statistics && !tournaments) {
@@ -35,7 +50,7 @@ export default function HomeScreen() {
         contentContainerClassName="px-4 pb-8"
         ListHeaderComponent={() => (
           <View>
-            <Text className="text-2xl font-bold text-gray-800 mt-6 mb-6 px-4">
+            <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-6 mb-6 px-4">
               Dashboard
             </Text>
 
@@ -67,7 +82,7 @@ export default function HomeScreen() {
             )}
 
             <View className="flex-row items-center justify-between px-4 mb-4">
-              <Text className="text-lg font-semibold text-gray-800">
+              <Text className="text-lg font-semibold text-gray-800 dark:text-gray-100">
                 Torneios Recentes
               </Text>
             </View>

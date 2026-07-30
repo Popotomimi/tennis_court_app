@@ -21,16 +21,16 @@ export function HistoryCard({ item, onPress }: HistoryCardProps) {
       <Card className="mb-3">
         <View className="flex-row justify-between items-start">
           <View className="flex-1 mr-2">
-            <Text className="text-lg font-bold text-gray-800">{item.tournamentName}</Text>
-            <Text className="text-xs text-gray-400 mt-1">Finalizado em {finishedDate}</Text>
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">{item.tournamentName}</Text>
+            <Text className="text-xs text-gray-400 dark:text-gray-500 mt-1">Finalizado em {finishedDate}</Text>
           </View>
-          <View className="bg-green-100 px-2 py-1 rounded-md">
-            <Text className="text-xs font-medium text-green-700">Finalizado</Text>
+          <View className="bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-md">
+            <Text className="text-xs font-medium text-green-700 dark:text-green-400">Finalizado</Text>
           </View>
         </View>
 
         {item.champion ? (
-          <View className="flex-row items-center mt-3 bg-yellow-50 rounded-lg p-3">
+          <View className="flex-row items-center mt-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
             <Ionicons name="trophy" size={20} color="#EAB308" />
             <View className="ml-2 flex-1">
               <Text className="text-xs text-yellow-600 font-medium">Campeão</Text>
@@ -39,7 +39,7 @@ export function HistoryCard({ item, onPress }: HistoryCardProps) {
             <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
           </View>
         ) : (
-          <View className="flex-row items-center mt-3 bg-gray-50 rounded-lg p-3">
+          <View className="flex-row items-center mt-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
             <Ionicons name="close-circle-outline" size={20} color="#9CA3AF" />
             <Text className="ml-2 text-sm text-gray-500">Sem campeão definido</Text>
           </View>

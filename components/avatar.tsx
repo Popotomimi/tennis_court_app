@@ -30,8 +30,8 @@ export function Avatar({ uri, name, size = 'md' }: AvatarProps) {
     : '?'
 
   return (
-    <View className={`${dimensions.container} rounded-full bg-green-100 items-center justify-center`}>
-      <Text className={`${dimensions.text} font-bold text-green-600`}>
+    <View className={`${dimensions.container} rounded-full bg-green-100 dark:bg-green-900/30 items-center justify-center`}>
+      <Text className={`${dimensions.text} font-bold text-green-600 dark:text-green-400`}>
         {initials}
       </Text>
     </View>
