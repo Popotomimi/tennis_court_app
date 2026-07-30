@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 09
+Sprint 10
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 10 — Experiência do Usuário (Skeleton, Toast, Bottom Sheet, Feedback visual, Tratamento de erros, Animações, Tema dark, SafeAreaView).
+Sprint 11 — Testes (Testes dos componentes, Testes dos hooks, Testes dos ViewModels).
 
 ---
 
@@ -1469,5 +1469,113 @@ Tela de listagem do histórico:
 - Navegação para `/history/:id` ao tocar em um card
 - Loading (full screen), Error (com retry), Empty (com mensagem) states
 - Header com título "Histórico" e total de torneios
+
+---
+
+# Sprint 10 — Experiência do Usuário
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências foram instaladas na Sprint 00.
+
+## Funcionalidades implementadas
+
+- SafeAreaView integrado ao ScreenContainer via react-native-safe-area-context
+- Tema Dark completo com paleta de cores, persistência (AsyncStorage), classe `dark` via NativeWind
+- Toast System configurado com react-native-toast-message e hook useToast() com presets success/error/warning/info
+- Error Handler unificado (parseApiError) com mensagens amigáveis para cada código HTTP
+- Skeleton components: Skeleton, SkeletonText, SkeletonTitle, SkeletonAvatar, SkeletonCard, TournamentCardSkeleton, StatCardSkeleton, ListSkeleton
+- Bottom Sheet wrapper (CustomBottomSheet) com @gorhom/bottom-sheet e ConfirmActionSheet
+- LoadingOverlay para feedback visual de operações em andamento
+- Hook useHaptic para feedback tátil (impact, success, error)
+- Animações: useFadeIn, useSlideIn (Reanimated) no utils/animations.ts
+- Dark Mode aplicado em todas as telas (11 screens) e todos os componentes compartilhados e específicos (~30+ arquivos)
+- Skeleton loading substituindo Loading spinners no Dashboard, Torneios, Histórico e Estatísticas
+- TabBar adaptável ao tema dark
+
+## Arquivos criados
+
+### Components
+- components/skeleton.tsx — Base skeleton com shimmer animado + SkeletonText, SkeletonTitle, SkeletonAvatar, SkeletonCard
+- components/tournament-card-skeleton.tsx — Skeleton específico para TournamentCard
+- components/stat-card-skeleton.tsx — Skeleton específico para StatCard
+- components/list-skeleton.tsx — Skeleton para listas (FlatList loading)
+- components/loading-overlay.tsx — Overlay semi-transparente com loading spinner
+- components/bottom-sheet.tsx — Wrapper reutilizável CustomBottomSheet com forwardRef
+- components/confirm-action-sheet.tsx — BottomSheet de confirmação
+
+### Hooks
+- hooks/use-toast.ts — Hook useToast() com showSuccess, showError, showWarning, showInfo
+- hooks/use-haptic.ts — Hook useHaptic() com impact, success, error
+
+### Utils
+- utils/error-handler.ts — Função parseApiError() com mensagens amigáveis por status code
+- utils/animations.ts — Hooks useFadeIn() e useSlideIn() com Reanimated
+
+## Arquivos modificados
+
+### Infraestrutura
+- theme/colors.ts — Adicionado objeto `dark` com paleta completa
+- stores/theme-store.ts — Adicionado persistência (AsyncStorage), restoreTheme(), isLoading
+- tailwind.config.js — Adicionado darkMode: 'class' e cores dark personalizadas
+- components/screen-container.tsx — Adicionado SafeAreaView com useSafeAreaInsets + dark mode bg
+- app/_layout.tsx — Adicionado Toast provider + rotas dinâmicas no Stack
+- providers/app-providers.tsx — Adicionado BottomSheetModalProvider + View com classe dark + restoreTheme()
+
+### Shared Components (dark mode)
+- components/card.tsx — dark:bg-gray-800
+- components/badge.tsx — dark variants para todas as variantes
+- components/avatar.tsx — dark:bg-green-900/30, dark:text-green-400
+- components/input.tsx — dark:bg-gray-800, dark:text-gray-100, dark:border-gray-600
+- components/password-input.tsx — dark:bg-gray-800, dark:text-gray-100, dark:border-gray-600
+- components/divider.tsx — dark:bg-gray-700
+- components/loading.tsx — dark:bg-gray-900, dark:text-gray-400
+- components/error-state.tsx — dark:text-gray-300
+- components/empty-state.tsx — dark:text-gray-400/500
+- components/button.tsx — dark:active:bg-green-900/20, dark:text-green-400
+
+### Auth Screens
+- app/(auth)/splash.tsx — dark:bg-gray-900, dark:text-green-400
+- app/(auth)/login.tsx — dark:text-gray-100/400, dark:text-red-400, dark:text-green-400
+- app/(auth)/register.tsx — mesmo padrão de dark mode
+
+### Tab Screens
+- app/(tabs)/_layout.tsx — TabBar adaptável ao tema dark (bg, border, inactiveTintColor)
+- app/(tabs)/index.tsx — Skeleton loading no lugar de Loading spinner, dark mode
+- app/(tabs)/tournaments.tsx — Skeleton loading, dark mode
+- app/(tabs)/history.tsx — Skeleton loading, dark mode
+- app/(tabs)/profile.tsx — dark mode nos modais, LoadingOverlay no lugar de Loading
+
+### Detail Screens
+- app/tournaments/[id].tsx — dark mode nos error containers e textos
+- app/matches/[id].tsx — (mantido)
+- app/history/[id].tsx — dark:text-gray-300/100
+- app/statistics/index.tsx — Skeleton loading, dark mode
+
+### Feature Components (dark mode)
+- features/tournaments/components/tournament-card.tsx
+- features/tournaments/components/tournament-detail-header.tsx
+- features/tournaments/components/participant-list-item.tsx
+- features/tournaments/components/create-tournament-modal.tsx
+- features/tournaments/components/edit-tournament-modal.tsx
+- features/tournaments/components/delete-tournament-confirmation.tsx
+- features/dashboard/components/stat-card.tsx
+- features/dashboard/components/tournament-list-item.tsx
+- features/profile/components/profile-header.tsx
+- features/profile/components/profile-menu-item.tsx
+- features/statistics/components/stat-card.tsx
+- features/statistics/components/win-rate-ring.tsx
+- features/statistics/components/stat-indicator.tsx
+- features/statistics/components/statistics-header.tsx
+- features/matches/components/match-card.tsx
+- features/matches/components/round-section.tsx
+- features/matches/components/select-winner-modal.tsx
+- features/history/components/history-card.tsx
+- features/history/components/history-detail-header.tsx
+- features/history/components/history-match-item.tsx
 
 ---

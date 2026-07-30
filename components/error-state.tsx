@@ -14,7 +14,7 @@ export function ErrorState({
   return (
     <View className="flex-1 items-center justify-center py-12 px-6">
       <Ionicons name="alert-circle-outline" size={64} color="#ef4444" />
-      <Text className="text-gray-700 text-lg font-medium mt-4 text-center">
+      <Text className="text-gray-700 dark:text-gray-300 text-lg font-medium mt-4 text-center">
         {message}
       </Text>
       {onRetry && (

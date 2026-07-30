@@ -2,10 +2,12 @@ import { useEffect } from 'react'
 import { Tabs, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useAuthStore } from '@/stores/auth-store'
+import { useThemeStore } from '@/stores/theme-store'
 
 export default function TabsLayout() {
   const router = useRouter()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const isDark = useThemeStore((state) => state.mode === 'dark')
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -17,10 +19,10 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#16a34a',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarInactiveTintColor: isDark ? '#64748b' : '#9ca3af',
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopColor: '#e5e7eb',
+          backgroundColor: isDark ? '#1e293b' : '#ffffff',
+          borderTopColor: isDark ? '#334155' : '#e5e7eb',
         },
         headerShown: false,
       }}

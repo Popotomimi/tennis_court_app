@@ -31,13 +31,13 @@ export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete 
       <Card className="mb-3">
         <View className="flex-row justify-between items-start">
           <View className="flex-1 mr-2">
-            <Text className="text-lg font-bold text-gray-800">{tournament.name}</Text>
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">{tournament.name}</Text>
             {tournament.description && (
-              <Text className="text-sm text-gray-500 mt-1" numberOfLines={2}>
+              <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1" numberOfLines={2}>
                 {tournament.description}
               </Text>
             )}
-            <Text className="text-xs text-gray-400 mt-2">
+            <Text className="text-xs text-gray-400 dark:text-gray-500 mt-2">
               Criado por {tournament.owner.name}
             </Text>
           </View>
@@ -47,7 +47,7 @@ export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete 
         <View className="flex-row items-center mt-3 gap-4">
           <View className="flex-row items-center gap-1">
             <Ionicons name="people-outline" size={16} color="#6b7280" />
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm text-gray-500 dark:text-gray-400">
               {tournament._count.participants}/{tournament.maxPlayers}
             </Text>
           </View>
@@ -57,7 +57,7 @@ export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete 
           <View className="flex-row gap-2 mt-3">
             <TouchableOpacity
               onPress={(e) => { e.stopPropagation(); onEdit?.(); }}
-              className="flex-row items-center gap-1 bg-blue-50 px-3 py-2 rounded-lg"
+              className="flex-row items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-lg"
               accessibilityRole="button"
               accessibilityLabel="Editar torneio"
             >
@@ -66,7 +66,7 @@ export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete 
             </TouchableOpacity>
             <TouchableOpacity
               onPress={(e) => { e.stopPropagation(); onDelete?.(); }}
-              className="flex-row items-center gap-1 bg-red-50 px-3 py-2 rounded-lg"
+              className="flex-row items-center gap-1 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg"
               accessibilityRole="button"
               accessibilityLabel="Excluir torneio"
             >

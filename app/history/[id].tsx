@@ -62,7 +62,7 @@ export default function HistoryDetailScreen() {
         ListHeaderComponent={<HistoryDetailHeader detail={detail} />}
         renderSectionHeader={({ section }) => (
           <View className="py-2">
-            <Text className="text-base font-bold text-gray-700">{section.title}</Text>
+            <Text className="text-base font-bold text-gray-700 dark:text-gray-300">{section.title}</Text>
           </View>
         )}
         renderItem={({ item }) => <HistoryMatchItem match={item} />}

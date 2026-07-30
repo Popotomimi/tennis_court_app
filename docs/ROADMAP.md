@@ -182,6 +182,7 @@ Build
 
 Implementar:
 
+- README
 - Android
 - iOS
 - Ícones

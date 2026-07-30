@@ -17,24 +17,24 @@ export function HistoryMatchItem({ match }: HistoryMatchItemProps) {
   return (
     <Card className="mb-2">
       <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-xs font-medium text-gray-400">
+        <Text className="text-xs font-medium text-gray-400 dark:text-gray-500">
           Rodada {match.round}
         </Text>
         {isCompleted && (
-          <View className="bg-green-100 px-2 py-0.5 rounded">
-            <Text className="text-xs font-medium text-green-700">Finalizada</Text>
+          <View className="bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded">
+            <Text className="text-xs font-medium text-green-700 dark:text-green-400">Finalizada</Text>
           </View>
         )}
       </View>
 
       <View className="flex-row items-center justify-between">
         <View className={`flex-1 items-center ${playerOneIsWinner ? '' : 'opacity-60'}`}>
-          <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${playerOneIsWinner ? 'bg-green-100' : 'bg-gray-100'}`}>
-            <Text className={`font-bold text-sm ${playerOneIsWinner ? 'text-green-700' : 'text-gray-500'}`}>
+          <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${playerOneIsWinner ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-700'}`}>
+            <Text className={`font-bold text-sm ${playerOneIsWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
               {match.playerOne.name.charAt(0).toUpperCase()}
             </Text>
           </View>
-          <Text className={`text-xs text-center font-medium ${playerOneIsWinner ? 'text-green-700' : 'text-gray-600'}`} numberOfLines={1}>
+          <Text className={`text-xs text-center font-medium ${playerOneIsWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`} numberOfLines={1}>
             {match.playerOne.name}
           </Text>
           {playerOneIsWinner && (
@@ -57,19 +57,19 @@ export function HistoryMatchItem({ match }: HistoryMatchItemProps) {
 
         {isBye ? (
           <View className="flex-1 items-center">
-            <View className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center mb-1">
+            <View className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 items-center justify-center mb-1">
               <Ionicons name="close-outline" size={20} color="#9CA3AF" />
             </View>
-            <Text className="text-xs text-gray-400 text-center">Aguardando</Text>
+            <Text className="text-xs text-gray-400 dark:text-gray-500 text-center">Aguardando</Text>
           </View>
         ) : (
           <View className={`flex-1 items-center ${playerTwoIsWinner ? '' : 'opacity-60'}`}>
-            <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${playerTwoIsWinner ? 'bg-green-100' : 'bg-gray-100'}`}>
-              <Text className={`font-bold text-sm ${playerTwoIsWinner ? 'text-green-700' : 'text-gray-500'}`}>
+            <View className={`w-10 h-10 rounded-full items-center justify-center mb-1 ${playerTwoIsWinner ? 'bg-green-100 dark:bg-green-900/30' : 'bg-gray-100 dark:bg-gray-700'}`}>
+              <Text className={`font-bold text-sm ${playerTwoIsWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
                 {match.playerTwo!.name.charAt(0).toUpperCase()}
               </Text>
             </View>
-            <Text className={`text-xs text-center font-medium ${playerTwoIsWinner ? 'text-green-700' : 'text-gray-600'}`} numberOfLines={1}>
+            <Text className={`text-xs text-center font-medium ${playerTwoIsWinner ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`} numberOfLines={1}>
               {match.playerTwo!.name}
             </Text>
             {playerTwoIsWinner && (

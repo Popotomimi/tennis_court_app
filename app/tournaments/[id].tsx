@@ -143,24 +143,24 @@ export default function TournamentDetailScreen() {
         <TournamentDetailHeader tournament={tournament} />
 
         {startError && (
-          <View className="bg-red-50 rounded-lg p-3 mb-4">
-            <Text className="text-red-600 text-sm">
+          <View className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 mb-4">
+            <Text className="text-red-600 dark:text-red-400 text-sm">
               {startError instanceof Error ? startError.message : 'Erro ao iniciar torneio'}
             </Text>
           </View>
         )}
 
         {joinError && (
-          <View className="bg-red-50 rounded-lg p-3 mb-4">
-            <Text className="text-red-600 text-sm">
+          <View className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 mb-4">
+            <Text className="text-red-600 dark:text-red-400 text-sm">
               {joinError instanceof Error ? joinError.message : 'Erro ao entrar no torneio'}
             </Text>
           </View>
         )}
 
         {leaveError && (
-          <View className="bg-red-50 rounded-lg p-3 mb-4">
-            <Text className="text-red-600 text-sm">
+          <View className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 mb-4">
+            <Text className="text-red-600 dark:text-red-400 text-sm">
               {leaveError instanceof Error ? leaveError.message : 'Erro ao sair do torneio'}
             </Text>
           </View>
@@ -231,7 +231,7 @@ export default function TournamentDetailScreen() {
         <View className="mb-4">
           <View className="flex-row items-center gap-2 mb-3">
             <Ionicons name="people-outline" size={20} color="#374151" />
-            <Text className="text-lg font-bold text-gray-800">
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">
               Participantes ({participantsTotal})
             </Text>
           </View>

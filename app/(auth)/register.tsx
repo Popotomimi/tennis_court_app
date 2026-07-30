@@ -60,10 +60,10 @@ export default function RegisterScreen() {
         className="flex-1"
       >
         <View className="flex-1 justify-center px-4">
-          <Text className="text-3xl font-bold text-gray-800 text-center mb-2">
+          <Text className="text-3xl font-bold text-gray-800 dark:text-gray-100 text-center mb-2">
             Criar Conta
           </Text>
-          <Text className="text-gray-500 text-center mb-8">
+          <Text className="text-gray-500 dark:text-gray-400 text-center mb-8">
             Preencha os dados para se cadastrar
           </Text>
 
@@ -128,7 +128,7 @@ export default function RegisterScreen() {
             />
 
             {error && (
-              <Text className="text-red-500 text-sm text-center">
+              <Text className="text-red-500 dark:text-red-400 text-sm text-center">
                 {error instanceof Error ? error.message : 'Erro ao cadastrar'}
               </Text>
             )}
@@ -141,9 +141,9 @@ export default function RegisterScreen() {
           </View>
 
           <View className="flex-row justify-center mt-8">
-            <Text className="text-gray-500">Já tem conta? </Text>
+            <Text className="text-gray-500 dark:text-gray-400">Já tem conta? </Text>
             <Text
-              className="text-green-600 font-medium"
+              className="text-green-600 dark:text-green-400 font-medium"
               onPress={() => router.push('/(auth)/login')}
             >
               Faça login

@@ -11,8 +11,8 @@ export function StatisticsHeader({ name, email, avatarUri }: StatisticsHeaderPro
   return (
     <View className="items-center py-6">
       <Avatar uri={avatarUri} name={name} size="lg" />
-      <Text className="text-xl font-bold text-gray-800 mt-3">{name}</Text>
-      <Text className="text-sm text-gray-500">{email}</Text>
+      <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mt-3">{name}</Text>
+      <Text className="text-sm text-gray-500 dark:text-gray-400">{email}</Text>
     </View>
   )
 }

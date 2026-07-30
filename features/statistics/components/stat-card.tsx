@@ -16,8 +16,8 @@ export function StatCard({ icon, label, value, color, bgColor }: StatCardProps) 
       <View className={`w-10 h-10 rounded-full items-center justify-center mb-2`} style={{ backgroundColor: bgColor }}>
         <Ionicons name={icon} size={20} color={color} />
       </View>
-      <Text className="text-2xl font-bold text-gray-800">{value}</Text>
-      <Text className="text-xs text-gray-500 mt-1 text-center">{label}</Text>
+      <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">{value}</Text>
+      <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">{label}</Text>
     </Card>
   )
 }

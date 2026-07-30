@@ -8,13 +8,13 @@ type ParticipantListItemProps = {
 
 export function ParticipantListItem({ participant }: ParticipantListItemProps) {
   return (
-    <View className="flex-row items-center py-3 px-4 bg-white rounded-lg mb-2">
+    <View className="flex-row items-center py-3 px-4 bg-white dark:bg-gray-800 rounded-lg mb-2">
       <Avatar uri={participant.avatar} name={participant.name} size="sm" />
       <View className="ml-3 flex-1">
-        <Text className="text-sm font-medium text-gray-800">
+        <Text className="text-sm font-medium text-gray-800 dark:text-gray-100">
           {participant.name}
         </Text>
-        <Text className="text-xs text-gray-400">
+        <Text className="text-xs text-gray-400 dark:text-gray-500">
           {participant.email}
         </Text>
       </View>

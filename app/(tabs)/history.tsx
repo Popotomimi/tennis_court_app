@@ -4,6 +4,7 @@ import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
 import { EmptyState } from '@/components/empty-state'
+import { ListSkeleton } from '@/components/list-skeleton'
 import { HistoryCard } from '@/features/history/components/history-card'
 import { useHistoryListViewModel } from '@/features/history/viewmodels/use-history-list-viewmodel'
 
@@ -14,8 +15,10 @@ export default function HistoryScreen() {
   if (isLoading && tournaments.length === 0) {
     return (
       <ScreenContainer>
-        <View className="flex-1 items-center justify-center">
-          <Loading message="Carregando histórico..." />
+        <View className="px-4 pt-4">
+          <View className="h-8 w-40 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2" />
+          <View className="h-4 w-36 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4" />
+          <ListSkeleton count={4} />
         </View>
       </ScreenContainer>
     )
@@ -43,11 +46,12 @@ export default function HistoryScreen() {
             onPress={() => router.push(`/history/${item.tournamentId}`)}
           />
         )}
-        contentContainerStyle={tournaments.length === 0 ? { flex: 1 } : { paddingBottom: 80 }}
+        contentContainerStyle={tournaments.length === 0 ? { flex: 1 } : {}}
+        contentContainerClassName="px-4 pb-20"
         ListHeaderComponent={
-          <View className="mb-4">
-            <Text className="text-2xl font-bold text-gray-800">Histórico</Text>
-            <Text className="text-sm text-gray-500 mt-1">
+          <View className="mb-4 pt-2">
+            <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">Histórico</Text>
+            <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {total > 0 ? `${total} torneio(s) finalizado(s)` : ''}
             </Text>
           </View>

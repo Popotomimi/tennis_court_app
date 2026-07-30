@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter, useLocalSearchParams } from 'expo-router'
@@ -7,6 +7,7 @@ import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
 import { EmptyState } from '@/components/empty-state'
 import { Button } from '@/components/button'
+import { ListSkeleton } from '@/components/list-skeleton'
 import { TournamentCard } from '@/features/tournaments/components/tournament-card'
 import { CreateTournamentModal } from '@/features/tournaments/components/create-tournament-modal'
 import { EditTournamentModal } from '@/features/tournaments/components/edit-tournament-modal'
@@ -59,8 +60,10 @@ export default function TournamentsScreen() {
   if (isLoading && tournaments.length === 0) {
     return (
       <ScreenContainer>
-        <View className="flex-1 items-center justify-center">
-          <Loading message="Carregando torneios..." />
+        <View className="px-4 pt-4">
+          <View className="h-8 w-40 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2" />
+          <View className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4" />
+          <ListSkeleton count={4} />
         </View>
       </ScreenContainer>
     )
@@ -91,11 +94,12 @@ export default function TournamentsScreen() {
             onDelete={() => setDeletingTournament(item)}
           />
         )}
-        contentContainerStyle={tournaments.length === 0 ? { flex: 1 } : { paddingBottom: 80 }}
+        contentContainerStyle={tournaments.length === 0 ? { flex: 1 } : {}}
+        contentContainerClassName="px-4 pb-20"
         ListHeaderComponent={
-          <View className="mb-4">
-            <Text className="text-2xl font-bold text-gray-800">Torneios</Text>
-            <Text className="text-sm text-gray-500 mt-1">
+          <View className="mb-4 px-4 pt-2">
+            <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">Torneios</Text>
+            <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {total > 0 ? `${total} torneio(s) encontrado(s)` : ''}
             </Text>
           </View>

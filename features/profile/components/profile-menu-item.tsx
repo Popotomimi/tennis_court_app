@@ -12,7 +12,7 @@ export function ProfileMenuItem({ icon, label, onPress, danger = false }: Profil
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center py-4 px-4 bg-white rounded-lg"
+      className="flex-row items-center py-4 px-4 bg-white dark:bg-gray-800 rounded-lg"
       accessibilityRole="button"
       accessibilityLabel={label}
     >
@@ -22,7 +22,7 @@ export function ProfileMenuItem({ icon, label, onPress, danger = false }: Profil
         color={danger ? '#dc2626' : '#374151'}
       />
       <Text
-        className={`flex-1 ml-3 text-base ${danger ? 'text-red-600' : 'text-gray-700'}`}
+        className={`flex-1 ml-3 text-base ${danger ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'}`}
       >
         {label}
       </Text>
