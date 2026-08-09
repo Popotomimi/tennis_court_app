@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { View, Text, SectionList, RefreshControl } from 'react-native'
-import { useLocalSearchParams, Stack } from 'expo-router'
+import { View, Text, SectionList, RefreshControl, TouchableOpacity, useColorScheme } from 'react-native'
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
@@ -11,6 +12,9 @@ import { HistoryMatchItem } from '@/features/history/components/history-match-it
 
 export default function HistoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
+  const router = useRouter()
+  const colorScheme = useColorScheme()
+  const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
   const historyId = id ?? ''
   const { detail, isLoading, error, refresh } = useHistoryDetailViewModel(historyId)
 
@@ -51,7 +55,7 @@ export default function HistoryDetailScreen() {
 
   return (
     <ScreenContainer>
-      <Stack.Screen options={{ title: detail.tournamentName }} />
+      <Stack.Screen options={{ title: detail.name }} />
 
       <SectionList
         sections={sections}
@@ -59,7 +63,19 @@ export default function HistoryDetailScreen() {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refresh} />
         }
-        ListHeaderComponent={<HistoryDetailHeader detail={detail} />}
+        ListHeaderComponent={
+          <View className="pt-2">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="flex-row items-center justify-center mb-3 w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800"
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+            >
+              <Ionicons name="arrow-back" size={24} color={backIconColor} />
+            </TouchableOpacity>
+            <HistoryDetailHeader detail={detail} />
+          </View>
+        }
         renderSectionHeader={({ section }) => (
           <View className="py-2">
             <Text className="text-base font-bold text-gray-700 dark:text-gray-300">{section.title}</Text>
@@ -73,7 +89,7 @@ export default function HistoryDetailScreen() {
             icon="trophy-outline"
           />
         }
-        contentContainerClassName="pb-8"
+        contentContainerClassName="px-4 pb-8"
         showsVerticalScrollIndicator={false}
       />
     </ScreenContainer>

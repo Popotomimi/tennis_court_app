@@ -10,7 +10,7 @@ export function useHistoryListViewModel() {
   })
 
   return {
-    tournaments: data?.tournaments ?? [],
+    tournaments: data?.data ?? [],
     total: data?.total ?? 0,
     isLoading,
     isRefetching,

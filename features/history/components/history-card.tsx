@@ -16,12 +16,12 @@ export function HistoryCard({ item, onPress }: HistoryCardProps) {
       onPress={onPress}
       activeOpacity={0.7}
       accessibilityRole="button"
-      accessibilityLabel={`Ver detalhes de ${item.tournamentName}`}
+      accessibilityLabel={`Ver detalhes de ${item.name}`}
     >
       <Card className="mb-3">
         <View className="flex-row justify-between items-start">
           <View className="flex-1 mr-2">
-            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">{item.tournamentName}</Text>
+            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">{item.name}</Text>
             <Text className="text-xs text-gray-400 dark:text-gray-500 mt-1">Finalizado em {finishedDate}</Text>
           </View>
           <View className="bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-md">

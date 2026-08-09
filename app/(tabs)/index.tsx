@@ -59,17 +59,17 @@ export default function HomeScreen() {
                 <StatCard
                   icon="trophy-outline"
                   label="Torneios"
-                  value={statistics.totalTournaments}
+                  value={statistics.tournamentsPlayed}
                 />
                 <StatCard
                   icon="tennisball-outline"
                   label="Partidas"
-                  value={statistics.totalMatches}
+                  value={statistics.matchesPlayed}
                 />
                 <StatCard
                   icon="checkmark-circle-outline"
                   label="Vitórias"
-                  value={statistics.wins}
+                  value={statistics.matchesWon}
                   color="#2563eb"
                 />
                 <StatCard

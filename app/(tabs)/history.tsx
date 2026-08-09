@@ -43,7 +43,7 @@ export default function HistoryScreen() {
         renderItem={({ item }) => (
           <HistoryCard
             item={item}
-            onPress={() => router.push(`/history/${item.tournamentId}`)}
+            onPress={() => router.push(`/history/${item.id}`)}
           />
         )}
         contentContainerStyle={tournaments.length === 0 ? { flex: 1 } : {}}

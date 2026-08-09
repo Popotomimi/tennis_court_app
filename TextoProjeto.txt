@@ -1,0 +1,187 @@
+Tennis League — APP + API
+
+Este texto foi preparado como parte do meu portfólio e pode ser usado no LinkedIn,
+GitHub ou em qualquer apresentação técnica do projeto.
+
+O projeto completo foi desenvolvido com o auxílio de inteligência artificial
+utilizando a ferramenta opencode conectada ao modelo DeepSeek V4 diretamente
+no Visual Studio Code, que leu e modificou todos os arquivos dos dois projetos
+em tempo real.
+
+===============================================================================
+VISÃO GERAL
+===============================================================================
+
+O Tennis League é um sistema completo de gerenciamento de torneios de tênis
+amadores, composto por uma API REST robusta (backend) e um aplicativo mobile
+( frontend) que se comunicam em tempo real.
+
+O objetivo do sistema é permitir que qualquer pessoa crie torneios, convide
+participantes, realize sorteios automáticos de confrontos, registre resultados
+das partidas e acompanhe estatísticas pessoais — tudo pelo celular.
+
+===============================================================================
+ARQUITETURA DO BACKEND (API)
+===============================================================================
+
+A API foi construída com Node.js + Express + TypeScript, seguindo uma
+arquitetura em camadas (Layered Architecture) dentro de cada módulo:
+
+  Route (define os endpoints + documentação OpenAPI/Swagger)
+    -> Controller (valida entrada com Zod, chama o service, envia resposta)
+      -> Service (regras de negócio, lança AppError em violações)
+        -> Repository (queries Prisma, apenas acesso a dados)
+          -> Prisma Client (banco de dados PostgreSQL)
+
+Módulos implementados:
+
+  - Auth: Cadastro e login com bcrypt (hash de senha com 10 rounds) e JWT
+    (token com expiração de 7 dias). Middleware de autenticação que verifica
+    o token e injeta o usuário na requisição.
+
+  - Users: Gerenciamento de perfil — atualização de nome, alteração de senha
+    (com validação de senha atual), upload de avatar com Multer (apenas JPEG,
+    PNG e WebP, limite de 2MB).
+
+  - Tournaments: CRUD completo de torneios com paginação, validação de dono
+    (apenas o criador pode editar/excluir), e controle de status
+    (WAITING -> STARTED -> FINISHED).
+
+  - Participants: Inscrição e saída de participantes com validações —
+    torneio precisa estar WAITING, não pode inscrever duplicados, respeita
+    o limite máximo de jogadores.
+
+  - Matches: Coração do sistema — sorteio automático dos confrontos usando
+    o algoritmo Fisher-Yates para embaralhamento aleatório dos participantes,
+    pareamento sequencial [0x1, 2x3, 4x5, ...] com suporte a "bye" para
+    número ímpar de jogadores. Registro de resultados com avanço automático
+    do vencedor para a próxima rodada. Quando todas as partidas são
+    finalizadas, o torneio é encerrado e o campeão é registrado no histórico.
+
+  - Statistics: Cálculo de estatísticas do usuário — torneios jogados,
+    torneios vencidos, partidas jogadas, partidas vencidas e aproveitamento
+    (win rate) com uma casa decimal.
+
+  - History: Histórico completo de torneios finalizados com detalhes de
+    todas as partidas, participantes e campeão.
+
+A API conta com:
+  - Documentação interativa via Swagger UI em /api-docs
+  - Tratamento global de erros com classes customizadas (AppError)
+  - Testes unitários (services + controllers), testes de middleware e testes
+    de integração com Jest + Supertest
+  - Cobertura global de 91% (statements), 80% (branches), 100% (functions)
+  - 18 suites de teste, 89 testes, 0 falhas
+  - Prisma ORM com schema declarativo e migrations versionadas
+  - Singleton do PrismaClient para gerenciamento eficiente de conexões
+
+===============================================================================
+ARQUITETURA DO FRONTEND (APP)
+===============================================================================
+
+O aplicativo foi construído com Expo SDK 57 + React Native 0.86 + TypeScript,
+utilizando NativeWind v4 (Tailwind CSS para React Native) para estilização.
+
+Tecnologias e padrões utilizados:
+
+  - Expo Router v3 com roteamento baseado em arquivos (file-based routing),
+    similar ao Next.js, oferecendo navegação declarativa e profunda
+    integração com o ecossistema Expo.
+
+  - NativeWind v4 para estilização utilitária com suporte nativo a dark mode
+    via API colorScheme.set(), permitindo troca de tema manual e persistente
+    sem depender da preferência do sistema operacional.
+
+  - Zustand para gerenciamento de estado global (autenticação e tema) com
+    persistência em AsyncStorage, garantindo que o token JWT e a preferência
+    de tema sobrevivam ao fechamento do app.
+
+  - TanStack React Query (antigo React Query) para gerenciamento de cache
+    e requisições assíncronas, com stale-while-revalidate, refetch em
+    foco de tela e indicadores de loading/refresh.
+
+  - React Hook Form + Zod para formulários tipados e validados no cliente
+    antes do envio para a API, garantindo consistência dos dados.
+
+  - Axios com interceptors para injeção automática do token JWT em todas
+    as requisições e logout automático em caso de 401 (token expirado).
+
+  - Arquitetura MVVM simplificada com ViewModels (custom hooks) que separam
+    a lógica de negócio da camada de apresentação, tornando os componentes
+    de tela enxutos e testáveis.
+
+Funcionalidades do APP:
+
+  - Splash screen animada com verificação de autenticação
+  - Tela de login e cadastro com validação em tempo real
+  - Dashboard com cards de estatísticas e lista de torneios recentes
+  - Feed de torneios com busca, paginação e cards de resumo
+  - Tela de detalhes do torneio com lista de participantes e partidas
+  - Participação em torneios com confirmação visual
+  - Sorteio automático dos confrontos com visualização da chave
+  - Registro de resultados das partidas
+  - Histórico completo de torneios finalizados
+  - Estatísticas detalhadas do jogador
+  - Perfil do usuário com avatar, edição de nome e alteração de senha
+  - Dark mode com alternância manual e persistente
+  - Estados de loading, erro e vazio em todas as telas
+  - Pull-to-refresh em todas as listas
+  - Toast notifications para feedback de ações
+
+===============================================================================
+COMO RODAR O PROJETO
+===============================================================================
+
+O projeto exige a configuração de dois ambientes distintos:
+
+1. BANCO DE DADOS (PostgreSQL via Docker):
+   - O arquivo docker-compose.yml sobe um container PostgreSQL 17
+   - docker compose up -d
+   - Isso cria o banco tennis_db com usuário admin/senha admin123 na porta 5432
+   - Após o container estar rodando, execute:
+     npx prisma migrate dev    (para aplicar as migrations ao banco)
+
+2. API (Node.js + Express):
+   - Copie .env.example para .env e ajuste as variáveis se necessário
+   - npm install
+   - npx prisma generate    (gera o cliente Prisma tipado)
+   - npm run dev             (inicia em modo desenvolvimento com hot-reload)
+   - A API roda em http://localhost:3000
+   - Swagger UI disponível em http://localhost:3000/api-docs
+   - npm test                (executa os 89 testes com cobertura)
+
+3. APP (React Native + Expo):
+   - npm install
+   - Configure a URL da API em constants/api.ts (10.0.2.2 para Android
+     emulador, localhost para iOS/web)
+   - npm start                (inicia o Expo dev server)
+   - Escaneie o QR code com Expo Go ou pressione 'a' para abrir no
+     emulador Android / 'i' para iOS / 'w' para web
+
+===============================================================================
+FERRAMENTAS E DEVOPS
+===============================================================================
+
+  - Docker: Container PostgreSQL 17 para ambiente de desenvolvimento
+    isolado e reproduzível
+  - ESLint + Prettier: Código padronizado e sem erros de lint
+  - Prisma Studio: Interface gráfica para visualizar e manipular o banco
+    de dados durante o desenvolvimento (npx prisma studio)
+  - Swagger: Documentação interativa da API seguindo o padrão OpenAPI 3.0
+  - Jest + Supertest: Testes unitários, de middleware e de integração com
+    cobertura mínima configurada de 70%
+  - TypeScript estrito nos dois projetos: Código 100% tipado, sem uso de
+    any, com strict mode ativado
+
+===============================================================================
+STATUS DO PROJETO
+===============================================================================
+
+  - API: Completa com 21 endpoints REST, 89 testes passando, cobertura
+    global > 90%, documentação Swagger, todas as regras de negócio
+    implementadas (sorteio, avanço automático, finalização, estatísticas)
+  - APP: Completo com 4 abas de navegação (Dashboard, Torneios, Histórico,
+    Perfil), formulários validados, dark mode, upload de avatar, pull-to-
+    refresh, estados de carregamento/erro/vazio em todas as telas
+  - Ambos os projetos foram desenvolvidos integralmente com o auxílio de
+    IA (opencode + DeepSeek V4) diretamente integrada ao Visual Studio Code
