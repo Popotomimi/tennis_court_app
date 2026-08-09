@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, Text, ScrollView, Alert } from 'react-native'
+import { View, Text, ScrollView, Modal, TouchableOpacity, useColorScheme } from 'react-native'
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { ScreenContainer } from '@/components/screen-container'
@@ -20,8 +20,13 @@ export default function TournamentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
   const user = useAuthStore((state) => state.user)
+  const colorScheme = useColorScheme()
+  const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
 
   const tournamentId = id ?? ''
+
+  const [showStartSheet, setShowStartSheet] = useState(false)
+  const [showLeaveSheet, setShowLeaveSheet] = useState(false)
 
   const {
     tournament,
@@ -70,21 +75,13 @@ export default function TournamentDetailScreen() {
   }, [joinSuccess, leaveSuccess])
 
   const handleStartTournament = () => {
-    Alert.alert(
-      'Iniciar Torneio',
-      'Tem certeza que deseja iniciar este torneio? Os confrontos serão gerados automaticamente.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Iniciar',
-          style: 'destructive',
-          onPress: async () => {
-            clearStartError()
-            await start(tournamentId)
-          },
-        },
-      ],
-    )
+    setShowStartSheet(true)
+  }
+
+  const handleConfirmStart = async () => {
+    setShowStartSheet(false)
+    clearStartError()
+    await start(tournamentId)
   }
 
   const handleJoinTournament = async () => {
@@ -93,21 +90,13 @@ export default function TournamentDetailScreen() {
   }
 
   const handleLeaveTournament = () => {
-    Alert.alert(
-      'Sair do Torneio',
-      'Tem certeza que deseja sair deste torneio?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sair',
-          style: 'destructive',
-          onPress: async () => {
-            clearLeaveError()
-            await leave(tournamentId)
-          },
-        },
-      ],
-    )
+    setShowLeaveSheet(true)
+  }
+
+  const handleConfirmLeave = async () => {
+    setShowLeaveSheet(false)
+    clearLeaveError()
+    await leave(tournamentId)
   }
 
   if (isLoading) {
@@ -139,7 +128,16 @@ export default function TournamentDetailScreen() {
     <ScreenContainer>
       <Stack.Screen options={{ title: tournament.name }} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-4 pb-8" className="flex-1">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="flex-row items-center justify-center mb-3 w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={24} color={backIconColor} />
+        </TouchableOpacity>
+
         <TournamentDetailHeader tournament={tournament} />
 
         {startError && (
@@ -248,6 +246,81 @@ export default function TournamentDetailScreen() {
           )}
         </View>
       </ScrollView>
+
+      <Modal visible={showStartSheet} animationType="slide" transparent>
+        <View className="flex-1 bg-black/50 justify-end">
+          <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+            <View className="items-center mb-4">
+              <View className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 items-center justify-center mb-3">
+                <Ionicons name="play-circle" size={28} color="#16a34a" />
+              </View>
+              <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 text-center">
+                Iniciar Torneio
+              </Text>
+              <Text className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                Tem certeza que deseja iniciar este torneio? Os confrontos serão gerados automaticamente.
+              </Text>
+            </View>
+
+            <View className="flex-row gap-3">
+              <View className="flex-1">
+                <Button
+                  title="Cancelar"
+                  variant="outline"
+                  onPress={() => setShowStartSheet(false)}
+                  disabled={isStarting}
+                />
+              </View>
+              <View className="flex-1">
+                <Button
+                  title="Iniciar"
+                  onPress={handleConfirmStart}
+                  loading={isStarting}
+                  disabled={isStarting}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showLeaveSheet} animationType="slide" transparent>
+        <View className="flex-1 bg-black/50 justify-end">
+          <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+            <View className="items-center mb-4">
+              <View className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 items-center justify-center mb-3">
+                <Ionicons name="log-out-outline" size={28} color="#dc2626" />
+              </View>
+              <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 text-center">
+                Sair do Torneio
+              </Text>
+              <Text className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                Tem certeza que deseja sair deste torneio?
+              </Text>
+            </View>
+
+            <View className="flex-row gap-3">
+              <View className="flex-1">
+                <Button
+                  title="Cancelar"
+                  variant="outline"
+                  onPress={() => setShowLeaveSheet(false)}
+                  disabled={isLeaving}
+                />
+              </View>
+              <View className="flex-1">
+                <Button
+                  title="Sair"
+                  variant="danger"
+                  onPress={handleConfirmLeave}
+                  loading={isLeaving}
+                  disabled={isLeaving}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScreenContainer>
   )
 }

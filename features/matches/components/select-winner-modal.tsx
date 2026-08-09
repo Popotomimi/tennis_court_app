@@ -7,7 +7,6 @@ type SelectWinnerModalProps = {
   playerOne: MatchPlayer | null
   playerTwo: MatchPlayer | null
   isLoading: boolean
-  error: Error | null
   onSelect: (winnerId: string) => void
   onClose: () => void
 }
@@ -17,7 +16,6 @@ export function SelectWinnerModal({
   playerOne,
   playerTwo,
   isLoading,
-  error,
   onSelect,
   onClose,
 }: SelectWinnerModalProps) {
@@ -39,14 +37,6 @@ export function SelectWinnerModal({
           <Text className="text-sm text-gray-500 dark:text-gray-400 text-center mb-5">
             Selecione o vencedor desta partida
           </Text>
-
-          {error && (
-            <View className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 mb-4">
-              <Text className="text-red-600 dark:text-red-400 text-sm text-center">
-                {error instanceof Error ? error.message : 'Erro ao registrar vencedor'}
-              </Text>
-            </View>
-          )}
 
           <View className="flex-row gap-3">
             {playerOne && (

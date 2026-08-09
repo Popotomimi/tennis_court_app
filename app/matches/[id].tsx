@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { SectionList, RefreshControl } from 'react-native'
-import { useLocalSearchParams, Stack } from 'expo-router'
+import { SectionList, RefreshControl, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
@@ -11,11 +12,16 @@ import { RoundSection } from '@/features/matches/components/round-section'
 import { MatchCard } from '@/features/matches/components/match-card'
 import { SelectWinnerModal } from '@/features/matches/components/select-winner-modal'
 import { useAuthStore } from '@/stores/auth-store'
+import { useToast } from '@/hooks/use-toast'
 import type { MatchPlayer } from '@/features/matches/types/match-types'
 
 export default function MatchesScreen() {
   const { id, ownerId } = useLocalSearchParams<{ id: string; ownerId: string }>()
+  const router = useRouter()
   const user = useAuthStore((state) => state.user)
+  const colorScheme = useColorScheme()
+  const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
+  const { showError } = useToast()
 
   const tournamentId = id ?? ''
   const isOwner = user?.id === ownerId
@@ -48,6 +54,12 @@ export default function MatchesScreen() {
       setSelectedPlayerTwo(null)
     }
   }, [updateSuccess])
+
+  useEffect(() => {
+    if (updateError) {
+      showError(updateError)
+    }
+  }, [updateError])
 
   const handleSelectWinner = (matchId: string, playerOne: MatchPlayer, playerTwo: MatchPlayer) => {
     clearUpdateError()
@@ -124,7 +136,19 @@ export default function MatchesScreen() {
             icon="trophy-outline"
           />
         }
-        contentContainerClassName="pb-8"
+        contentContainerClassName="px-4 pb-8"
+        ListHeaderComponent={
+          <View className="pt-2">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="flex-row items-center justify-center mb-3 w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800"
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+            >
+              <Ionicons name="arrow-back" size={24} color={backIconColor} />
+            </TouchableOpacity>
+          </View>
+        }
         showsVerticalScrollIndicator={false}
       />
 
@@ -133,7 +157,6 @@ export default function MatchesScreen() {
         playerOne={selectedPlayerOne}
         playerTwo={selectedPlayerTwo}
         isLoading={isUpdating}
-        error={updateError}
         onSelect={handleConfirmWinner}
         onClose={handleCloseModal}
       />

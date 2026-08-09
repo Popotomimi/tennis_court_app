@@ -1,14 +1,16 @@
-import { useEffect } from 'react'
 import { View, Text, KeyboardAvoidingView, Platform } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { ScreenContainer } from '@/components/screen-container'
 import { Input } from '@/components/input'
 import { PasswordInput } from '@/components/password-input'
 import { Button } from '@/components/button'
 import { useLoginViewModel } from '@/features/auth/viewmodels/use-login-viewmodel'
+import { useToast } from '@/hooks/use-toast'
+import { parseApiError } from '@/utils/error-handler'
 import type { LoginRequest } from '@/features/auth/types/auth-types'
 
 const loginSchema = z.object({
@@ -18,9 +20,21 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>
 
+function getLoginErrorMessage(error: unknown): string {
+  if (error instanceof AxiosError) {
+    const data = error.response?.data as { message?: string } | undefined
+    if (data?.message) return data.message
+    if (error.response?.status === 401) {
+      return 'Usuário ou senha incorretos. Verifique os dados e tente novamente.'
+    }
+  }
+  return parseApiError(error)
+}
+
 export default function LoginScreen() {
   const router = useRouter()
-  const { login, isLoading, error, clearError } = useLoginViewModel()
+  const { login, isLoading, clearError } = useLoginViewModel()
+  const { showError } = useToast()
 
   const {
     control,
@@ -39,8 +53,8 @@ export default function LoginScreen() {
     try {
       await login(data as LoginRequest)
       router.replace('/(tabs)')
-    } catch {
-      // Error is handled by the ViewModel
+    } catch (error) {
+      showError(getLoginErrorMessage(error))
     }
   }
 
@@ -88,12 +102,6 @@ export default function LoginScreen() {
                 />
               )}
             />
-
-            {error && (
-              <Text className="text-red-500 dark:text-red-400 text-sm text-center">
-                {error instanceof Error ? error.message : 'Erro ao fazer login'}
-              </Text>
-            )}
 
             <Button
               title="Entrar"

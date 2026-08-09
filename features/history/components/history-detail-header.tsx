@@ -16,7 +16,7 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
   return (
     <View>
       <View className="mb-4">
-        <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">{detail.tournamentName}</Text>
+        <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">{detail.name}</Text>
         {detail.description && (
           <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">{detail.description}</Text>
         )}

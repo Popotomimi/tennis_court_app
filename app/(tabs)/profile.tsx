@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as ImagePicker from 'expo-image-picker'
+import { Ionicons } from '@expo/vector-icons'
 import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
@@ -13,6 +14,7 @@ import { Input } from '@/components/input'
 import { PasswordInput } from '@/components/password-input'
 import { Divider } from '@/components/divider'
 import { LoadingOverlay } from '@/components/loading-overlay'
+import { useToast } from '@/hooks/use-toast'
 import { ProfileHeader } from '@/features/profile/components/profile-header'
 import { ProfileMenuItem } from '@/features/profile/components/profile-menu-item'
 import { useAuthStore } from '@/stores/auth-store'
@@ -45,6 +47,8 @@ export default function ProfileScreen() {
   const logout = useAuthStore((state) => state.logout)
   const [showNameModal, setShowNameModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showLogoutSheet, setShowLogoutSheet] = useState(false)
+  const { showSuccess } = useToast()
 
   const {
     updateName,
@@ -134,21 +138,14 @@ export default function ProfileScreen() {
   }
 
   const handleLogout = () => {
-    Alert.alert(
-      'Sair',
-      'Tem certeza que deseja sair?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sair',
-          style: 'destructive',
-          onPress: async () => {
-            await logout()
-            router.replace('/(auth)/login')
-          },
-        },
-      ],
-    )
+    setShowLogoutSheet(true)
+  }
+
+  const handleConfirmLogout = async () => {
+    setShowLogoutSheet(false)
+    await logout()
+    showSuccess('Você saiu da sua conta com sucesso.')
+    router.replace('/(auth)/login')
   }
 
   if (!user) {
@@ -344,6 +341,41 @@ export default function ProfileScreen() {
       </Modal>
 
       <LoadingOverlay visible={isUpdatingAvatar} message="Atualizando foto..." />
+
+      <Modal visible={showLogoutSheet} animationType="slide" transparent>
+        <View className="flex-1 bg-black/50 justify-end">
+          <View className="bg-white dark:bg-gray-800 rounded-t-2xl p-6">
+            <View className="items-center mb-4">
+              <View className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 items-center justify-center mb-3">
+                <Ionicons name="alert-circle" size={28} color="#dc2626" />
+              </View>
+              <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 text-center">
+                Sair da conta
+              </Text>
+              <Text className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
+                Tem certeza que deseja sair?
+              </Text>
+            </View>
+
+            <View className="flex-row gap-3">
+              <View className="flex-1">
+                <Button
+                  title="Cancelar"
+                  variant="outline"
+                  onPress={() => setShowLogoutSheet(false)}
+                />
+              </View>
+              <View className="flex-1">
+                <Button
+                  title="Sair"
+                  variant="danger"
+                  onPress={handleConfirmLogout}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScreenContainer>
   )
 }

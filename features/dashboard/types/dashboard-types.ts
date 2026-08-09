@@ -1,8 +1,8 @@
 export type UserStatistics = {
-  totalTournaments: number
-  totalMatches: number
-  wins: number
-  losses: number
+  tournamentsPlayed: number
+  tournamentsWon: number
+  matchesPlayed: number
+  matchesWon: number
   winRate: number
 }
 

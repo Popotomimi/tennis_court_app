@@ -48,7 +48,7 @@ export default function StatisticsScreen() {
     )
   }
 
-  const hasData = statistics.totalMatches > 0
+  const hasData = statistics.matchesPlayed > 0
 
   return (
     <ScreenContainer>
@@ -86,14 +86,14 @@ export default function StatisticsScreen() {
               <StatCard
                 icon="trophy-outline"
                 label="Torneios"
-                value={statistics.totalTournaments}
+                value={statistics.tournamentsPlayed}
                 color="#2563EB"
                 bgColor="#DBEAFE"
               />
               <StatCard
                 icon="tennisball-outline"
                 label="Partidas"
-                value={statistics.totalMatches}
+                value={statistics.matchesPlayed}
                 color="#9333EA"
                 bgColor="#F3E8FF"
               />
@@ -103,14 +103,14 @@ export default function StatisticsScreen() {
               <StatCard
                 icon="checkmark-circle-outline"
                 label="Vitórias"
-                value={statistics.wins}
+                value={statistics.matchesWon}
                 color="#16A34A"
                 bgColor="#DCFCE7"
               />
               <StatCard
                 icon="close-circle-outline"
                 label="Derrotas"
-                value={statistics.losses}
+                value={statistics.matchesPlayed - statistics.matchesWon}
                 color="#EF4444"
                 bgColor="#FEE2E2"
               />
@@ -125,16 +125,16 @@ export default function StatisticsScreen() {
             <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-8 shadow-sm">
               <StatIndicator
                 label="Vitórias"
-                value={statistics.wins}
-                maxValue={statistics.totalMatches}
+                value={statistics.matchesWon}
+                maxValue={statistics.matchesPlayed}
                 color="#16A34A"
                 bgColor="#DCFCE7"
               />
               <View className="h-3" />
               <StatIndicator
                 label="Derrotas"
-                value={statistics.losses}
-                maxValue={statistics.totalMatches}
+                value={statistics.matchesPlayed - statistics.matchesWon}
+                maxValue={statistics.matchesPlayed}
                 color="#EF4444"
                 bgColor="#FEE2E2"
               />

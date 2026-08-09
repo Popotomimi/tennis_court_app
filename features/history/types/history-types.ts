@@ -1,52 +1,54 @@
 export type HistoryChampion = {
   id: string
   name: string
-  avatar: string | null
+  avatar?: string | null
 }
 
 export type HistoryItem = {
   id: string
   tournamentId: string
-  tournamentName: string
+  name: string
   champion: HistoryChampion | null
   finishedAt: string
   totalParticipants: number
 }
 
 export type HistoryListResponse = {
-  tournaments: HistoryItem[]
+  data: HistoryItem[]
   total: number
+  page: number
+  limit: number
 }
 
 export type HistoryMatch = {
   id: string
   round: number
-  position: number
+  position?: number
   playerOne: {
     id: string
     name: string
-    avatar: string | null
+    avatar?: string | null
   }
   playerTwo: {
     id: string
     name: string
-    avatar: string | null
+    avatar?: string | null
   } | null
   winnerId: string | null
-  status: 'PENDING' | 'COMPLETED'
+  status: 'PENDING' | 'COMPLETED' | 'FINISHED'
 }
 
 export type HistoryDetail = {
   id: string
   tournamentId: string
-  tournamentName: string
+  name: string
   description: string | null
   champion: HistoryChampion
   finishedAt: string
   participants: {
     id: string
     name: string
-    avatar: string | null
+    avatar?: string | null
   }[]
   matches: HistoryMatch[]
   totalParticipants: number
