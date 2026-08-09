@@ -13,6 +13,9 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
     day: 'numeric',
   })
 
+  const totalParticipants = detail.participants.length
+  const totalMatches = detail.matches.length
+
   return (
     <View>
       <View className="mb-4">
@@ -37,7 +40,7 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
           <View className="ml-3">
             <Text className="text-lg font-bold text-yellow-800">{detail.champion.name}</Text>
             <Text className="text-sm text-yellow-600">
-              {detail.totalParticipants} participantes | {detail.totalMatches} partidas
+              {totalParticipants} participantes | {totalMatches} partidas
             </Text>
           </View>
         </View>
@@ -46,12 +49,12 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
       <View className="flex-row gap-3 mb-4">
         <View className="flex-1 bg-blue-50 rounded-lg p-3 items-center">
           <Ionicons name="people-outline" size={20} color="#2563EB" />
-          <Text className="text-lg font-bold text-blue-700 mt-1">{detail.totalParticipants}</Text>
+          <Text className="text-lg font-bold text-blue-700 mt-1">{totalParticipants}</Text>
           <Text className="text-xs text-blue-600">Participantes</Text>
         </View>
         <View className="flex-1 bg-purple-50 rounded-lg p-3 items-center">
           <Ionicons name="tennisball-outline" size={20} color="#9333EA" />
-          <Text className="text-lg font-bold text-purple-700 mt-1">{detail.totalMatches}</Text>
+          <Text className="text-lg font-bold text-purple-700 mt-1">{totalMatches}</Text>
           <Text className="text-xs text-purple-600">Partidas</Text>
         </View>
       </View>
