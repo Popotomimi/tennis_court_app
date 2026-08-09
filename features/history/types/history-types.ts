@@ -51,6 +51,4 @@ export type HistoryDetail = {
     avatar?: string | null
   }[]
   matches: HistoryMatch[]
-  totalParticipants: number
-  totalMatches: number
 }
