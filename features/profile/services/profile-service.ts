@@ -29,11 +29,11 @@ export const profileService = {
       type: `image/${ext}`,
     } as unknown as Blob)
 
-    const response = await api.post<User>(ENDPOINTS.profile.avatar, formData, {
+    const response = await api.post<{ message: string; user: User }>(ENDPOINTS.profile.avatar, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
-    return response.data
+    return response.data.user
   },
 }

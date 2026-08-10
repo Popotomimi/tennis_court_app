@@ -1,5 +1,6 @@
-import { View, Text, ScrollView } from 'react-native'
-import { Stack } from 'expo-router'
+import { View, Text, ScrollView, TouchableOpacity, useColorScheme } from 'react-native'
+import { Stack, useRouter } from 'expo-router'
+import { Ionicons } from '@expo/vector-icons'
 import { ScreenContainer } from '@/components/screen-container'
 import { Loading } from '@/components/loading'
 import { ErrorState } from '@/components/error-state'
@@ -15,6 +16,9 @@ import { useAuthStore } from '@/stores/auth-store'
 export default function StatisticsScreen() {
   const user = useAuthStore((state) => state.user)
   const { statistics, isLoading, error, refresh } = useStatisticsViewModel()
+  const router = useRouter()
+  const colorScheme = useColorScheme()
+  const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
 
   if (isLoading) {
     return (
@@ -54,7 +58,20 @@ export default function StatisticsScreen() {
     <ScreenContainer>
       <Stack.Screen options={{ title: 'Estatísticas' }} />
 
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="px-4 pb-8"
+        className="flex-1"
+      >
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="flex-row items-center justify-center mb-3 w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800"
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+        >
+          <Ionicons name="arrow-back" size={24} color={backIconColor} />
+        </TouchableOpacity>
+
         <StatisticsHeader
           name={user?.name ?? ''}
           email={user?.email ?? ''}

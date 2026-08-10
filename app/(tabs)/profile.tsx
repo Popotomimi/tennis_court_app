@@ -48,7 +48,7 @@ export default function ProfileScreen() {
   const [showNameModal, setShowNameModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [showLogoutSheet, setShowLogoutSheet] = useState(false)
-  const { showSuccess } = useToast()
+  const { showSuccess, showError } = useToast()
 
   const {
     updateName,
@@ -133,7 +133,12 @@ export default function ProfileScreen() {
     })
 
     if (!result.canceled && result.assets[0]) {
-      await updateAvatar(result.assets[0].uri)
+      try {
+        await updateAvatar(result.assets[0].uri)
+        showSuccess('Foto atualizada com sucesso. Aqui está você!')
+      } catch (error) {
+        showError(error)
+      }
     }
   }
 

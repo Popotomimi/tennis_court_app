@@ -6,12 +6,16 @@ export function useTournamentDetailViewModel(id: string, userId?: string) {
     queryKey: ['tournament-details', id],
     queryFn: () => tournamentDetailService.getDetails(id),
     enabled: !!id,
+    staleTime: 0,
+    refetchOnMount: 'always',
   })
 
   const participantsQuery = useQuery({
     queryKey: ['tournament-participants', id],
     queryFn: () => tournamentDetailService.getParticipants(id),
     enabled: !!id,
+    staleTime: 0,
+    refetchOnMount: 'always',
   })
 
   const participants = participantsQuery.data?.participants ?? []

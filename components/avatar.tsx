@@ -1,4 +1,5 @@
 import { View, Text, Image } from 'react-native'
+import { resolveAssetUrl } from '@/constants/api'
 
 type AvatarProps = {
   uri?: string | null
@@ -14,11 +15,12 @@ const sizeMap = {
 
 export function Avatar({ uri, name, size = 'md' }: AvatarProps) {
   const dimensions = sizeMap[size]
+  const resolvedUri = resolveAssetUrl(uri)
 
-  if (uri) {
+  if (resolvedUri) {
     return (
       <Image
-        source={{ uri }}
+        source={{ uri: resolvedUri }}
         className={`${dimensions.container} rounded-full bg-gray-200`}
         accessibilityLabel="Foto do perfil"
       />

@@ -14,7 +14,9 @@ export function StatCard({ icon, label, value, color = '#16a34a' }: StatCardProp
     <Card className="flex-1 items-center py-4">
       <Ionicons name={icon} size={28} color={color} />
       <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-2">{value}</Text>
-      <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">{label}</Text>
+      <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center" numberOfLines={1}>
+        {label}
+      </Text>
     </Card>
   )
 }
