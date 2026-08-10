@@ -25,11 +25,19 @@ export default function HomeScreen() {
       <ScreenContainer>
         <View className="px-4 pt-6">
           <View className="h-8 w-40 bg-gray-200 dark:bg-gray-700 rounded-lg mb-6" />
-          <View className="flex-row gap-3 mb-6">
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-            <StatCardSkeleton />
-            <StatCardSkeleton />
+          <View className="flex-row flex-wrap px-4 mb-6">
+            <View className="w-1/2 p-1">
+              <StatCardSkeleton />
+            </View>
+            <View className="w-1/2 p-1">
+              <StatCardSkeleton />
+            </View>
+            <View className="w-1/2 p-1">
+              <StatCardSkeleton />
+            </View>
+            <View className="w-1/2 p-1">
+              <StatCardSkeleton />
+            </View>
           </View>
           <ListSkeleton count={3} />
         </View>
@@ -55,29 +63,37 @@ export default function HomeScreen() {
             </Text>
 
             {statistics && (
-              <View className="flex-row gap-3 px-4 mb-6">
-                <StatCard
-                  icon="trophy-outline"
-                  label="Torneios"
-                  value={statistics.tournamentsPlayed}
-                />
-                <StatCard
-                  icon="tennisball-outline"
-                  label="Partidas"
-                  value={statistics.matchesPlayed}
-                />
-                <StatCard
-                  icon="checkmark-circle-outline"
-                  label="Vitórias"
-                  value={statistics.matchesWon}
-                  color="#2563eb"
-                />
-                <StatCard
-                  icon="trending-up-outline"
-                  label="Aproveitamento"
-                  value={`${statistics.winRate}%`}
-                  color="#eab308"
-                />
+              <View className="flex-row flex-wrap px-4 mb-1">
+                <View className="w-1/2 p-1">
+                  <StatCard
+                    icon="trophy-outline"
+                    label="Torneios"
+                    value={statistics.tournamentsPlayed}
+                  />
+                </View>
+                <View className="w-1/2 p-1">
+                  <StatCard
+                    icon="tennisball-outline"
+                    label="Partidas"
+                    value={statistics.matchesPlayed}
+                  />
+                </View>
+                <View className="w-1/2 p-1">
+                  <StatCard
+                    icon="checkmark-circle-outline"
+                    label="Vitórias"
+                    value={statistics.matchesWon}
+                    color="#2563eb"
+                  />
+                </View>
+                <View className="w-1/2 p-1">
+                  <StatCard
+                    icon="trending-up-outline"
+                    label="Aproveitamento"
+                    value={`${statistics.winRate}%`}
+                    color="#eab308"
+                  />
+                </View>
               </View>
             )}
 
