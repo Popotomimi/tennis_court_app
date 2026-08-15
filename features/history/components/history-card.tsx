@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Card } from '@/components/card'
+import { SportBadge } from '@/components/sport-badge'
 import type { HistoryItem } from '../types/history-types'
 
 type HistoryCardProps = {
@@ -50,6 +51,7 @@ export function HistoryCard({ item, onPress }: HistoryCardProps) {
             <Ionicons name="people-outline" size={16} color="#6b7280" />
             <Text className="text-sm text-gray-500">{item.totalParticipants} participantes</Text>
           </View>
+          <SportBadge sport={item.sport} />
         </View>
       </Card>
     </TouchableOpacity>

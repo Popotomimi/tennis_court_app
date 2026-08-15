@@ -2,18 +2,13 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Card } from '@/components/card'
 import { Badge } from '@/components/badge'
+import { MATCH_STATUS_CONFIG } from '@/constants/status'
 import type { Match, MatchPlayer } from '../types/match-types'
 
 type MatchCardProps = {
   match: Match
   isOwner: boolean
   onSelectWinner: (matchId: string, playerOne: MatchPlayer, playerTwo: MatchPlayer) => void
-}
-
-const statusConfig: Record<string, { label: string; variant: 'success' | 'warning' | 'info' }> = {
-  PENDING: { label: 'Pendente', variant: 'warning' },
-  IN_PROGRESS: { label: 'Em Andamento', variant: 'info' },
-  COMPLETED: { label: 'Finalizado', variant: 'success' },
 }
 
 function PlayerColumn({ player, isWinner }: { player: MatchPlayer | null; isWinner: boolean }) {
@@ -49,8 +44,8 @@ function PlayerColumn({ player, isWinner }: { player: MatchPlayer | null; isWinn
 }
 
 export function MatchCard({ match, isOwner, onSelectWinner }: MatchCardProps) {
-  const config = statusConfig[match.status] ?? { label: 'Desconhecido', variant: 'warning' as const }
-  const isCompleted = match.status === 'COMPLETED'
+  const config = MATCH_STATUS_CONFIG[match.status] ?? { label: 'Desconhecido', variant: 'warning' as const }
+  const isCompleted = match.status === 'FINISHED'
   const isBye = match.playerTwo === null
 
   const handlePress = () => {

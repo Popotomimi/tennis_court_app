@@ -8,7 +8,7 @@ type HistoryMatchItemProps = {
 }
 
 export function HistoryMatchItem({ match }: HistoryMatchItemProps) {
-  const isCompleted = match.status === 'COMPLETED' || match.status === 'FINISHED'
+  const isCompleted = match.status === 'FINISHED'
   const isBye = match.playerTwo === null
 
   const playerOneIsWinner = isCompleted && match.winnerId === match.playerOne.id

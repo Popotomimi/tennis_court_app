@@ -1,6 +1,6 @@
-import type { Tournament, CreateTournamentRequest, UpdateTournamentRequest } from '@/types/tournament'
+import type { Tournament, TournamentSport, CreateTournamentRequest, UpdateTournamentRequest } from '@/types/tournament'
 
-export type { Tournament, CreateTournamentRequest, UpdateTournamentRequest }
+export type { Tournament, TournamentSport, CreateTournamentRequest, UpdateTournamentRequest }
 
 export type TournamentListParams = {
   page?: number

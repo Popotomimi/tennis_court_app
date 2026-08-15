@@ -73,7 +73,7 @@ export default function HomeScreen() {
                 </View>
                 <View className="w-1/2 p-1">
                   <StatCard
-                    icon="tennisball-outline"
+                    icon="flag-outline"
                     label="Partidas"
                     value={statistics.matchesPlayed}
                   />

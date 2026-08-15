@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { SportBadge } from '@/components/sport-badge'
 import type { HistoryDetail } from '../types/history-types'
 
 type HistoryDetailHeaderProps = {
@@ -23,7 +24,12 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
         {detail.description && (
           <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">{detail.description}</Text>
         )}
-        <Text className="text-xs text-gray-400 dark:text-gray-500 mt-2">Finalizado em {finishedDate}</Text>
+        <View className="flex-row items-center gap-2 mt-2">
+          <Text className="text-xs text-gray-400 dark:text-gray-500">Finalizado em {finishedDate}</Text>
+        </View>
+        <View className="mt-3">
+          <SportBadge sport={detail.sport} />
+        </View>
       </View>
 
       <View className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-4">
@@ -53,7 +59,7 @@ export function HistoryDetailHeader({ detail }: HistoryDetailHeaderProps) {
           <Text className="text-xs text-blue-600">Participantes</Text>
         </View>
         <View className="flex-1 bg-purple-50 rounded-lg p-3 items-center">
-          <Ionicons name="tennisball-outline" size={20} color="#9333EA" />
+          <Ionicons name="flag-outline" size={20} color="#9333EA" />
           <Text className="text-lg font-bold text-purple-700 mt-1">{totalMatches}</Text>
           <Text className="text-xs text-purple-600">Partidas</Text>
         </View>
