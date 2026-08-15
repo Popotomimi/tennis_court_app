@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { View, Text, Modal } from 'react-native'
 import { Button } from '@/components/button'
 import { useDeleteTournamentViewModel } from '../viewmodels/use-delete-tournament-viewmodel'
+import { useToast } from '@/hooks/use-toast'
 
 type DeleteTournamentConfirmationProps = {
   visible: boolean
@@ -17,6 +18,7 @@ export function DeleteTournamentConfirmation({
   onClose,
 }: DeleteTournamentConfirmationProps) {
   const { remove, isLoading, error, isSuccess, clearError } = useDeleteTournamentViewModel()
+  const { showSuccess } = useToast()
 
   const handleDelete = async () => {
     clearError()
@@ -25,6 +27,7 @@ export function DeleteTournamentConfirmation({
 
   useEffect(() => {
     if (isSuccess) {
+      showSuccess('Torneio excluído.')
       onClose()
     }
   }, [isSuccess])

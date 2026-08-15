@@ -14,6 +14,7 @@ import { useTournamentDetailViewModel } from '@/features/tournaments/viewmodels/
 import { useStartTournamentViewModel } from '@/features/tournaments/viewmodels/use-start-tournament-viewmodel'
 import { useJoinTournamentViewModel } from '@/features/participants/viewmodels/use-join-tournament-viewmodel'
 import { useLeaveTournamentViewModel } from '@/features/participants/viewmodels/use-leave-tournament-viewmodel'
+import { useToast } from '@/hooks/use-toast'
 import { useAuthStore } from '@/stores/auth-store'
 
 export default function TournamentDetailScreen() {
@@ -22,6 +23,7 @@ export default function TournamentDetailScreen() {
   const user = useAuthStore((state) => state.user)
   const colorScheme = useColorScheme()
   const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
+  const { showSuccess } = useToast()
 
   const tournamentId = id ?? ''
 
@@ -64,15 +66,24 @@ export default function TournamentDetailScreen() {
 
   useEffect(() => {
     if (startSuccess) {
+      showSuccess('Torneio iniciado! Confrontos gerados.')
       refresh()
     }
   }, [startSuccess])
 
   useEffect(() => {
-    if (joinSuccess || leaveSuccess) {
+    if (joinSuccess) {
+      showSuccess('Você entrou no torneio!')
       refresh()
     }
-  }, [joinSuccess, leaveSuccess])
+  }, [joinSuccess])
+
+  useEffect(() => {
+    if (leaveSuccess) {
+      showSuccess('Você saiu do torneio.')
+      refresh()
+    }
+  }, [leaveSuccess])
 
   const handleStartTournament = () => {
     setShowStartSheet(true)
@@ -121,8 +132,8 @@ export default function TournamentDetailScreen() {
   const isOwner = user?.id === tournament.ownerId
   const canEdit = isOwner && tournament.status === 'WAITING'
   const canStart = isOwner && tournament.status === 'WAITING' && tournament._count.participants >= 2
-  const canJoin = !isOwner && !isParticipant && tournament.status === 'WAITING'
-  const canLeave = !isOwner && isParticipant && tournament.status === 'WAITING'
+  const canJoin = !isParticipant && tournament.status === 'WAITING'
+  const canLeave = isParticipant && tournament.status === 'WAITING'
 
   return (
     <ScreenContainer>

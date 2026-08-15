@@ -9,6 +9,7 @@ import { Input } from '@/components/input'
 import { PasswordInput } from '@/components/password-input'
 import { Button } from '@/components/button'
 import { useRegisterViewModel } from '@/features/auth/viewmodels/use-register-viewmodel'
+import { useToast } from '@/hooks/use-toast'
 import type { RegisterRequest } from '@/features/auth/types/auth-types'
 
 const registerSchema = z
@@ -28,6 +29,7 @@ type RegisterFormData = z.infer<typeof registerSchema>
 export default function RegisterScreen() {
   const router = useRouter()
   const { register, isLoading, error, clearError } = useRegisterViewModel()
+  const { showSuccess } = useToast()
 
   const {
     control,
@@ -47,6 +49,7 @@ export default function RegisterScreen() {
     clearError()
     try {
       await register(data as RegisterRequest)
+      showSuccess('Bem-vindo! Conta criada com sucesso.')
       router.replace('/(tabs)')
     } catch {
       // Error is handled by the ViewModel
