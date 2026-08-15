@@ -8,6 +8,7 @@ import { Input } from '@/components/input'
 import { SportSelect } from './sport-select'
 import { SPORTS } from '@/constants/sports'
 import { useUpdateTournamentViewModel } from '../viewmodels/use-update-tournament-viewmodel'
+import { useToast } from '@/hooks/use-toast'
 import type { Tournament } from '@/types/tournament'
 
 const updateSchema = z.object({
@@ -27,6 +28,7 @@ type EditTournamentModalProps = {
 
 export function EditTournamentModal({ visible, tournament, onClose }: EditTournamentModalProps) {
   const { update, isLoading, error, isSuccess, clearError } = useUpdateTournamentViewModel()
+  const { showSuccess } = useToast()
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm<UpdateFormData>({
     resolver: zodResolver(updateSchema),
@@ -40,6 +42,7 @@ export function EditTournamentModal({ visible, tournament, onClose }: EditTourna
 
   useEffect(() => {
     if (isSuccess) {
+      showSuccess('Torneio atualizado com sucesso!')
       onClose()
     }
   }, [isSuccess])

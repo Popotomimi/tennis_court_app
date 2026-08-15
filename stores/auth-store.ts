@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { User } from '@/types/user'
 import { storage } from '@/services/storage'
 import { STORAGE_KEYS } from '@/constants/storage-keys'
+import { queryClient } from '@/providers/query-client'
 
 interface AuthState {
   token: string | null
@@ -53,6 +54,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     await storage.remove(STORAGE_KEYS.AUTH_TOKEN)
     await storage.remove(STORAGE_KEYS.AUTH_USER)
+    queryClient.clear()
     set({ token: null, user: null, isAuthenticated: false })
   },
 

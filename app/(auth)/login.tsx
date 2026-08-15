@@ -34,7 +34,7 @@ function getLoginErrorMessage(error: unknown): string {
 export default function LoginScreen() {
   const router = useRouter()
   const { login, isLoading, clearError } = useLoginViewModel()
-  const { showError } = useToast()
+  const { showSuccess, showError } = useToast()
 
   const {
     control,
@@ -52,6 +52,7 @@ export default function LoginScreen() {
     clearError()
     try {
       await login(data as LoginRequest)
+      showSuccess('Bem-vindo novamente!')
       router.replace('/(tabs)')
     } catch (error) {
       showError(getLoginErrorMessage(error))

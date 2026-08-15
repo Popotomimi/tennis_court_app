@@ -9,7 +9,7 @@ export const participantService = {
   },
 
   async leave(tournamentId: string): Promise<LeaveTournamentResponse> {
-    const response = await api.post<LeaveTournamentResponse>(ENDPOINTS.participants.leave(tournamentId))
+    const response = await api.delete<LeaveTournamentResponse>(ENDPOINTS.participants.leave(tournamentId))
     return response.data
   },
 }

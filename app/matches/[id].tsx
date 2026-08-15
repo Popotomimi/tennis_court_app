@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { SectionList, RefreshControl, TouchableOpacity, useColorScheme, View } from 'react-native'
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
@@ -21,7 +21,7 @@ export default function MatchesScreen() {
   const user = useAuthStore((state) => state.user)
   const colorScheme = useColorScheme()
   const backIconColor = colorScheme === 'dark' ? '#9ca3af' : '#374151'
-  const { showError } = useToast()
+  const { showSuccess, showError } = useToast()
 
   const tournamentId = id ?? ''
   const isOwner = user?.id === ownerId
@@ -46,6 +46,7 @@ export default function MatchesScreen() {
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null)
   const [selectedPlayerOne, setSelectedPlayerOne] = useState<MatchPlayer | null>(null)
   const [selectedPlayerTwo, setSelectedPlayerTwo] = useState<MatchPlayer | null>(null)
+  const hasCelebratedWin = useRef(false)
 
   useEffect(() => {
     if (updateSuccess) {
@@ -54,6 +55,28 @@ export default function MatchesScreen() {
       setSelectedPlayerTwo(null)
     }
   }, [updateSuccess])
+
+  useEffect(() => {
+    if (!updateSuccess || hasCelebratedWin.current) {
+      return
+    }
+
+    const finalRound = Math.max(0, ...rounds.map((round) => round.round))
+    if (finalRound === 0) {
+      return
+    }
+
+    const allFinished = rounds.every((round) => round.matches.every((match) => match.status === 'FINISHED'))
+    if (!allFinished) {
+      return
+    }
+
+    const finalRoundMatch = rounds.find((round) => round.round === finalRound)?.matches[0]
+    if (finalRoundMatch?.winnerId && finalRoundMatch.winnerId === user?.id) {
+      hasCelebratedWin.current = true
+      showSuccess('Parabéns! Você venceu o torneio!')
+    }
+  }, [updateSuccess, rounds, user?.id])
 
   useEffect(() => {
     if (updateError) {

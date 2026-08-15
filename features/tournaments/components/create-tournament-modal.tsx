@@ -8,6 +8,7 @@ import { Input } from '@/components/input'
 import { SportSelect } from './sport-select'
 import { DEFAULT_SPORT, SPORTS } from '@/constants/sports'
 import { useCreateTournamentViewModel } from '../viewmodels/use-create-tournament-viewmodel'
+import { useToast } from '@/hooks/use-toast'
 
 const createSchema = z.object({
   name: z.string().min(3, 'O nome deve ter no mínimo 3 caracteres').max(100, 'O nome deve ter no máximo 100 caracteres'),
@@ -25,6 +26,7 @@ type CreateTournamentModalProps = {
 
 export function CreateTournamentModal({ visible, onClose }: CreateTournamentModalProps) {
   const { create, isLoading, error, isSuccess, clearError } = useCreateTournamentViewModel()
+  const { showSuccess } = useToast()
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm<CreateFormData>({
     resolver: zodResolver(createSchema),
@@ -38,6 +40,7 @@ export function CreateTournamentModal({ visible, onClose }: CreateTournamentModa
 
   useEffect(() => {
     if (isSuccess) {
+      showSuccess('Torneio criado com sucesso!')
       reset()
       onClose()
     }
