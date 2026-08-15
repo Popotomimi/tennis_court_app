@@ -1,16 +1,19 @@
 import { useEffect } from 'react'
-import { View, Text, Modal } from 'react-native'
+import { View, Text, Modal, ScrollView } from 'react-native'
 import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
+import { SportSelect } from './sport-select'
+import { SPORTS } from '@/constants/sports'
 import { useUpdateTournamentViewModel } from '../viewmodels/use-update-tournament-viewmodel'
 import type { Tournament } from '@/types/tournament'
 
 const updateSchema = z.object({
   name: z.string().min(3, 'O nome deve ter no mínimo 3 caracteres').max(100, 'O nome deve ter no máximo 100 caracteres'),
   description: z.string().max(500, 'A descrição deve ter no máximo 500 caracteres').optional(),
+  sport: z.enum(SPORTS),
   maxPlayers: z.number({ message: 'Deve ser um número' }).int('Deve ser um número inteiro').min(2, 'Mínimo de 2 participantes').max(128, 'Máximo de 128 participantes'),
 })
 
@@ -30,6 +33,7 @@ export function EditTournamentModal({ visible, tournament, onClose }: EditTourna
     defaultValues: {
       name: tournament.name,
       description: tournament.description ?? '',
+      sport: tournament.sport,
       maxPlayers: tournament.maxPlayers,
     },
   })
@@ -59,50 +63,60 @@ export function EditTournamentModal({ visible, tournament, onClose }: EditTourna
             </Text>
           )}
 
-          <View className="gap-4">
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label="Nome"
-                  placeholder="Nome do torneio"
-                  value={value}
-                  onChangeText={onChange}
-                  error={errors.name?.message}
-                />
-              )}
-            />
+          <ScrollView showsVerticalScrollIndicator={false} className="max-h-80">
+            <View className="gap-4">
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    label="Nome"
+                    placeholder="Nome do torneio"
+                    value={value}
+                    onChangeText={onChange}
+                    error={errors.name?.message}
+                  />
+                )}
+              />
 
-            <Controller
-              control={control}
-              name="description"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label="Descrição (opcional)"
-                  placeholder="Descrição do torneio"
-                  value={value ?? ''}
-                  onChangeText={onChange}
-                  error={errors.description?.message}
-                />
-              )}
-            />
+              <Controller
+                control={control}
+                name="description"
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    label="Descrição (opcional)"
+                    placeholder="Descrição do torneio"
+                    value={value ?? ''}
+                    onChangeText={onChange}
+                    error={errors.description?.message}
+                  />
+                )}
+              />
 
-            <Controller
-              control={control}
-              name="maxPlayers"
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  label="Máximo de participantes"
-                  placeholder="2 a 128"
-                  value={String(value)}
-                  onChangeText={(text) => onChange(Number(text))}
-                  keyboardType="numeric"
-                  error={errors.maxPlayers?.message}
-                />
-              )}
-            />
-          </View>
+              <Controller
+                control={control}
+                name="sport"
+                render={({ field: { onChange, value } }) => (
+                  <SportSelect value={value} onChange={onChange} />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="maxPlayers"
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    label="Máximo de participantes"
+                    placeholder="2 a 128"
+                    value={String(value)}
+                    onChangeText={(text) => onChange(Number(text))}
+                    keyboardType="numeric"
+                    error={errors.maxPlayers?.message}
+                  />
+                )}
+              />
+            </View>
+          </ScrollView>
 
           <View className="flex-row gap-3 mt-6">
             <Button

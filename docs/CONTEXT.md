@@ -269,7 +269,7 @@ Todo código deverá ser:
 
 Sprint atual:
 
-Sprint 10
+Sprint 1 — Multi-Esportes
 
 Status:
 
@@ -281,7 +281,7 @@ Concluída.
 
 Próximo passo:
 
-Sprint 11 — Testes (Testes dos componentes, Testes dos hooks, Testes dos ViewModels).
+Sprint 2 — Permissões de torneio (inscrição pública, convite e aprovação/negação).
 
 ---
 
@@ -1577,5 +1577,64 @@ Nenhuma. Todas as dependências foram instaladas na Sprint 00.
 - features/history/components/history-card.tsx
 - features/history/components/history-detail-header.tsx
 - features/history/components/history-match-item.tsx
+
+---
+
+# Sprint 1 — Multi-Esportes
+
+## Status
+
+Concluída.
+
+## Dependências instaladas
+
+Nenhuma. Todas as dependências utilizadas (expo, @expo/vector-icons, zod, react-hook-form, nativewind) já faziam parte do projeto.
+
+## Funcionalidades implementadas
+
+- Suporte a múltiplas modalidades de torneio: Tênis (TENNIS), Beach Tennis (BEACH_TENNIS) e Pickleball (PICKLEBALL)
+- Tipo `TournamentSport` centralizado em types/tournament.ts (fonte de verdade única)
+- Campo `sport` adicionado aos tipos `Tournament`, `CreateTournamentRequest`, `UpdateTournamentRequest`, `HistoryItem` e `HistoryDetail`
+- Envio de `sport` na criação de torneio (default TENNIS) e na edição (pré-preenchido)
+- Seleção visual de modalidade nos modais de criar/editar torneio via `SportSelect`
+- Exibição da modalidade em: card de torneio, detalhe do torneio, dashboard (lista recente), card de histórico e detalhe do histórico via `SportBadge`
+- Config central de modalidades (label + ícone) em constants/sports.ts e de status (label + variante) em constants/status.ts, eliminando duplicação
+- `MatchStatus` corrigido de `PENDING | IN_PROGRESS | COMPLETED` para `PENDING | FINISHED`, alinhado ao contrato real da API
+- Ícones específicos por modalidade (MaterialCommunityIcons: tennis, umbrella-beach, table-tennis)
+- Ícones genéricos nas métricas "Partidas" (flag-outline) substituindo tennisball-outline fixo
+- Compatível com os temas claro e escuro (NativeWind dark:)
+
+## Arquivos criados
+
+- constants/sports.ts
+- constants/status.ts
+- components/sport-badge.tsx
+- features/tournaments/components/sport-select.tsx
+
+## Arquivos modificados
+
+- types/tournament.ts - adicionado `TournamentSport` e campo `sport`
+- features/tournaments/types/tournament-types.ts - re-export de `TournamentSport`
+- features/history/types/history-types.ts - campo `sport` em `HistoryItem`/`HistoryDetail`, status de `HistoryMatch` como PENDING/FINISHED
+- features/tournaments/components/tournament-card.tsx - SportBadge + status centralizado
+- features/tournaments/components/tournament-detail-header.tsx - SportBadge + status centralizado (removido campo morto do config)
+- features/dashboard/components/tournament-list-item.tsx - SportBadge + status centralizado
+- features/history/components/history-card.tsx - SportBadge
+- features/history/components/history-detail-header.tsx - SportBadge + ícone genérico na métrica Partidas
+- features/matches/types/match-types.ts - `MatchStatus` = PENDING | FINISHED
+- features/matches/components/match-card.tsx - usa `MATCH_STATUS_CONFIG`, isCompleted = status === 'FINISHED'
+- features/history/components/history-match-item.tsx - isCompleted = status === 'FINISHED'
+- app/(tabs)/index.tsx - ícone genérico na métrica Partidas
+- app/statistics/index.tsx - ícone genérico na métrica Partidas
+- features/tournaments/components/create-tournament-modal.tsx - campo `sport` (schema, default e SportSelect)
+- features/tournaments/components/edit-tournament-modal.tsx - campo `sport` (schema, default e SportSelect)
+
+## Pendências
+
+Nenhuma pendência de implementação.
+
+## Próxima Sprint
+
+Sprint 2 — Permissões de torneio (inscrição pública, convite e aprovação/negação).
 
 ---

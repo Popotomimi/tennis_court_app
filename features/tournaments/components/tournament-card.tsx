@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Card } from '@/components/card'
 import { Badge } from '@/components/badge'
+import { SportBadge } from '@/components/sport-badge'
+import { TOURNAMENT_STATUS_CONFIG } from '@/constants/status'
 import type { Tournament } from '@/types/tournament'
 
 type TournamentCardProps = {
@@ -12,14 +14,8 @@ type TournamentCardProps = {
   onDelete?: () => void
 }
 
-const statusConfig: Record<string, { label: string; variant: 'warning' | 'info' | 'success' }> = {
-  WAITING: { label: 'Aguardando', variant: 'warning' },
-  STARTED: { label: 'Em andamento', variant: 'info' },
-  FINISHED: { label: 'Finalizado', variant: 'success' },
-}
-
 export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete }: TournamentCardProps) {
-  const statusInfo = statusConfig[tournament.status] ?? { label: tournament.status, variant: 'warning' as const }
+  const statusInfo = TOURNAMENT_STATUS_CONFIG[tournament.status] ?? { label: tournament.status, variant: 'warning' as const }
 
   return (
     <TouchableOpacity
@@ -51,6 +47,7 @@ export function TournamentCard({ tournament, isOwner, onPress, onEdit, onDelete 
               {tournament._count.participants}/{tournament.maxPlayers}
             </Text>
           </View>
+          <SportBadge sport={tournament.sport} />
         </View>
 
         {isOwner && tournament.status === 'WAITING' && (

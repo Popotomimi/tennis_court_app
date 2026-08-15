@@ -1,3 +1,5 @@
+import type { TournamentSport } from '@/types/tournament'
+
 export type HistoryChampion = {
   id: string
   name: string
@@ -8,6 +10,7 @@ export type HistoryItem = {
   id: string
   tournamentId: string
   name: string
+  sport: TournamentSport
   champion: HistoryChampion | null
   finishedAt: string
   totalParticipants: number
@@ -35,13 +38,14 @@ export type HistoryMatch = {
     avatar?: string | null
   } | null
   winnerId: string | null
-  status: 'PENDING' | 'COMPLETED' | 'FINISHED'
+  status: 'PENDING' | 'FINISHED'
 }
 
 export type HistoryDetail = {
   id: string
   tournamentId: string
   name: string
+  sport: TournamentSport
   description: string | null
   champion: HistoryChampion
   finishedAt: string

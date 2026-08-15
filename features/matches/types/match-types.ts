@@ -4,7 +4,7 @@ export type MatchPlayer = {
   avatar: string | null
 }
 
-export type MatchStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
+export type MatchStatus = 'PENDING' | 'FINISHED'
 
 export type Match = {
   id: string

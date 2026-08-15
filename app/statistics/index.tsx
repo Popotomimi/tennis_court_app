@@ -108,7 +108,7 @@ export default function StatisticsScreen() {
                 bgColor="#DBEAFE"
               />
               <StatCard
-                icon="tennisball-outline"
+                icon="flag-outline"
                 label="Partidas"
                 value={statistics.matchesPlayed}
                 color="#9333EA"

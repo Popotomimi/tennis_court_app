@@ -1,23 +1,18 @@
 import { View, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { Badge } from '@/components/badge'
+import { SportBadge } from '@/components/sport-badge'
+import { TOURNAMENT_STATUS_CONFIG } from '@/constants/status'
 import type { Tournament } from '@/types/tournament'
 
 type TournamentDetailHeaderProps = {
   tournament: Tournament
 }
 
-const statusConfig: Record<string, { label: string; variant: 'warning' | 'info' | 'success'; icon: keyof typeof Ionicons.glyphMap }> = {
-  WAITING: { label: 'Aguardando', variant: 'warning', icon: 'time-outline' },
-  STARTED: { label: 'Em andamento', variant: 'info', icon: 'play-circle-outline' },
-  FINISHED: { label: 'Finalizado', variant: 'success', icon: 'checkmark-circle-outline' },
-}
-
 export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderProps) {
-  const statusInfo = statusConfig[tournament.status] ?? {
+  const statusInfo = TOURNAMENT_STATUS_CONFIG[tournament.status] ?? {
     label: tournament.status,
     variant: 'warning' as const,
-    icon: 'help-outline' as const,
   }
 
   const formattedDate = new Date(tournament.createdAt).toLocaleDateString('pt-BR', {
@@ -47,6 +42,7 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
           <Text className="text-sm text-gray-600 dark:text-gray-400">
             {tournament._count.participants} / {tournament.maxPlayers} participantes
           </Text>
+          <SportBadge sport={tournament.sport} />
         </View>
 
         <View className="flex-row items-center gap-2">

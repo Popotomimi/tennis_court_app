@@ -1,5 +1,7 @@
 export type TournamentStatus = 'WAITING' | 'STARTED' | 'FINISHED'
 
+export type TournamentSport = 'TENNIS' | 'BEACH_TENNIS' | 'PICKLEBALL'
+
 export type TournamentOwner = {
   id: string
   name: string
@@ -14,6 +16,7 @@ export type Tournament = {
   id: string
   name: string
   description?: string | null
+  sport: TournamentSport
   status: TournamentStatus
   ownerId: string
   maxPlayers: number
@@ -26,11 +29,13 @@ export type Tournament = {
 export type CreateTournamentRequest = {
   name: string
   description?: string
+  sport?: TournamentSport
   maxPlayers: number
 }
 
 export type UpdateTournamentRequest = {
   name?: string
   description?: string | null
+  sport?: TournamentSport
   maxPlayers?: number
 }
